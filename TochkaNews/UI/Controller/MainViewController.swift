@@ -69,7 +69,6 @@ class MainViewController: UIViewController {
             .map { cellViewModels -> [Section] in
                 [Section(model: "1", items: cellViewModels)]
             }
-            .asObservable()
             .bind(to: table.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
     }
