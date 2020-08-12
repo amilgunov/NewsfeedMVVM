@@ -68,7 +68,6 @@
 			isa = PBXGroup;
 			children = (
 				5B3B48B024D297EC004A6304 /* TochkaNews */,
-				5BC05E5024E4737F0031DA81 /* APISettings.swift */,
 				5B3B48AF24D297EC004A6304 /* Products */,
 				C20050CFFF9F2D9D38C7DBFD /* Pods */,
 				A9BA9CB2C6E252ADB6A44B8D /* Frameworks */,
@@ -86,6 +85,7 @@
 		5B3B48B024D297EC004A6304 /* TochkaNews */ = {
 			isa = PBXGroup;
 			children = (
+				5BC05E5024E4737F0031DA81 /* APISettings.swift */,
 				5BC05E4E24E471FD0031DA81 /* App */,
 				5B79676D24D29BF5007581B1 /* Model */,
 				5BC05E5824E477790031DA81 /* Helper */,
