@@ -71,9 +71,7 @@ final class MainViewModel: MainViewModelType {
                 case .failure:
                     self.currentPage -= 1
                 case .success(let cellViewModels):
-                    self.cells
-                        
-                        .onNext(cellViewModels)
+                    self.cells.onNext(cellViewModels)
                 }
                 self.state = .completed
             })
