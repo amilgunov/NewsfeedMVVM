@@ -22,9 +22,9 @@ class CellViewController: UITableViewCell {
         }
     }
     
-    var newsImageView: UIImageView!
-    var newsTitleLabel: UILabel!
-    var newsAuthorLabel: UILabel!
+    var newsImageView: UIImageView
+    var newsTitleLabel: UILabel
+    var newsAuthorLabel: UILabel
     
     func bindingViewModel() {
     
@@ -95,6 +95,9 @@ class CellViewController: UITableViewCell {
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        self.newsImageView = UIImageView()
+        self.newsTitleLabel = UILabel()
+        self.newsAuthorLabel = UILabel()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupIU()
     }

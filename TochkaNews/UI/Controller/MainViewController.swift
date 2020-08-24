@@ -15,8 +15,8 @@ typealias Section = AnimatableSectionModel<String, CellViewModel>
 
 class MainViewController: UIViewController {
     
-    private var viewModel: MainViewModelType!
-    private var table: UITableView!
+    private var viewModel: MainViewModelType?
+    private var table: UITableView
     private let disposeBag = DisposeBag()
     
     private let dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
@@ -34,7 +34,7 @@ class MainViewController: UIViewController {
             refreshControl
                 .rx.controlEvent(UIControl.Event.valueChanged)
                 .subscribe(onNext: { [unowned self] in
-                    self.viewModel.fetchTrigger.onNext(.initial)
+                    self.viewModel?.fetchTrigger.onNext(.initial)
                     refreshControl.endRefreshing()
                     })
                 .disposed(by: disposeBag)
@@ -59,13 +59,13 @@ class MainViewController: UIViewController {
     
     private func bindingViewModel() {
         
-        viewModel.title
+        viewModel?.title
             .subscribe(onNext: { [unowned self] text in
                 self.title = text
             })
             .disposed(by: disposeBag)
         
-        viewModel.cells
+        viewModel?.cells
             .map { cellViewModels -> [Section] in
                 [Section(model: "1", items: cellViewModels)]
             }
@@ -78,11 +78,12 @@ class MainViewController: UIViewController {
         
         setupUI()
         bindingViewModel()
-        viewModel.fetchTrigger.onNext(.initial)
+        viewModel?.fetchTrigger.onNext(.initial)
     }
 
     init(viewModel: MainViewModelType) {
         self.viewModel = viewModel
+        self.table = UITableView()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -98,8 +99,8 @@ extension MainViewController: UITableViewDelegate {
         let contentHeight = scrollView.contentSize.height
         let diff = contentHeight - scrollView.frame.height
 
-        if offsetY > 0 && offsetY > (diff + 100) && viewModel.state == .completed {
-            viewModel.fetchTrigger.onNext(.update(.nextPage))
+        if offsetY > 0 && offsetY > (diff + 100) && viewModel?.state == .completed {
+            viewModel?.fetchTrigger.onNext(.update(.nextPage))
         }
     }
 }
