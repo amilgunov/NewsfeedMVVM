@@ -1,4 +1,4 @@
-# TochkaNews
+# NewsApp
 The Newsfeed app with following stack:
  
   - MVVM
