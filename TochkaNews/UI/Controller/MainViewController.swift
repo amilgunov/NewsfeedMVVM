@@ -20,8 +20,8 @@ class MainViewController: UIViewController {
     private let disposeBag = DisposeBag()
     
     private let dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
-            
-        let cell = tableView.dequeueReusableCell(withIdentifier: CellViewController.cellIdentifier)
+        
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellViewController.cellIdentifier)
             (cell as? CellViewController)?.viewModel = cellViewModel
             return cell ?? UITableViewCell()
         }
@@ -34,7 +34,7 @@ class MainViewController: UIViewController {
             refreshControl
                 .rx.controlEvent(UIControl.Event.valueChanged)
                 .subscribe(onNext: { [unowned self] in
-                    self.viewModel.updateData(for: .firstPage)
+                    self.viewModel.fetchTrigger.onNext(.initial)
                     refreshControl.endRefreshing()
                     })
                 .disposed(by: disposeBag)
@@ -65,7 +65,7 @@ class MainViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        viewModel.results
+        viewModel.cells
             .map { cellViewModels -> [Section] in
                 [Section(model: "1", items: cellViewModels)]
             }
@@ -78,8 +78,7 @@ class MainViewController: UIViewController {
         
         setupUI()
         bindingViewModel()
-        viewModel.initialFetchData()
-        viewModel.updateData(for: .firstPage)
+        viewModel.fetchTrigger.onNext(.initial)
     }
 
     init(viewModel: MainViewModelType) {
@@ -100,7 +99,7 @@ extension MainViewController: UITableViewDelegate {
         let diff = contentHeight - scrollView.frame.height
 
         if offsetY > 0 && offsetY > (diff + 100) && viewModel.state == .completed {
-            viewModel.updateData(for: .nextPage)
+            viewModel.fetchTrigger.onNext(.update(.nextPage))
         }
     }
 }

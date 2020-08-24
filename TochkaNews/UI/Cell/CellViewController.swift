@@ -91,7 +91,7 @@ class CellViewController: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         disposeBag = DisposeBag()
-        newsImageView.image = nil
+        newsImageView.image = UIImage()
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

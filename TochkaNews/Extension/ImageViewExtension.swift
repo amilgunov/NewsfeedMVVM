@@ -24,14 +24,20 @@ extension UIImageView {
             
             switch result {
             case .failure:
-                self?.image = defaultImage
+                DispatchQueue.main.async {
+                    self?.image = defaultImage
+                }
                 return
             case .success(let imageData):
                 if let imageData = imageData as? Data, let downloadedImage = UIImage(data: imageData) {
                     imageCache.setObject(downloadedImage, forKey: NSString(string: URLString))
-                    self?.image = downloadedImage
+                    DispatchQueue.main.async {
+                        self?.image = downloadedImage
+                    }
                 } else {
-                    self?.image = defaultImage
+                    DispatchQueue.main.async {
+                        self?.image = defaultImage
+                    }
                 }
             }
         }

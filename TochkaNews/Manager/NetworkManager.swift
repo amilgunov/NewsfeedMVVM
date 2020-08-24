@@ -9,6 +9,8 @@
 import Foundation
 import Alamofire
 
+typealias FetchCompletion = (Result<Any, Error>) -> Void
+
 protocol NetworkManagerType: class {
     
     static var shared: NetworkManagerType { get }
@@ -25,8 +27,9 @@ class NetworkManager: NetworkManagerType {
     func getData(request: String, page: Int, _ completion: @escaping FetchCompletion) {
         
         let parameters: Parameters = ["q": request, "apiKey": apiSettings.apiKey, "page": page]
+        let queue = DispatchQueue(label: "networkQueue", qos: .default, attributes: .concurrent)
         
-        AF.request(apiSettings.url, method: .get, parameters: parameters).validate().responseDecodable(of: NewsFeed.self, decoder: JSONDecoder()) { newsResponse in
+        AF.request(apiSettings.url, method: .get, parameters: parameters).validate().responseDecodable(of: NewsFeed.self, queue: queue, decoder: JSONDecoder()) { newsResponse in
             
             switch newsResponse.result {
             case .success(let newsResponse):
@@ -39,7 +42,9 @@ class NetworkManager: NetworkManagerType {
     
     func getImageData(from: String, _ completion: @escaping FetchCompletion) {
         
-        AF.request(from, method: .get).validate().responseData { response in
+        let queue = DispatchQueue(label: "networkQueue", qos: .userInitiated, attributes: .concurrent)
+        
+        AF.request(from, method: .get).validate().responseData(queue: queue) { response in
             
             switch response.result {
             case .success(let imageData):

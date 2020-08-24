@@ -13,13 +13,10 @@ import RxCocoa
 
 protocol MainViewModelType {
     
-    var results: PublishSubject<[CellViewModel]> { get }
-    var state: CurrentState { get set }
+    var fetchTrigger: PublishSubject<FetchType> { get }
+    var cells: PublishSubject<[CellViewModel]> { get }
     var title: Observable<String> { get }
-    
-    func initialFetchData()
-    func updateData(for page: PageType)
-    func cellViewModel(for indexPath: IndexPath) -> CellViewModel
+    var state: CurrentState { get set }
 }
 
 final class MainViewModel: MainViewModelType {
@@ -28,75 +25,55 @@ final class MainViewModel: MainViewModelType {
     private var currentPage: Int
     private let mockRequest = "apple"
     private let disposeBag = DisposeBag()
+    
+    //MARK: - Unput
+    public let fetchTrigger = PublishSubject<FetchType>()
 
-    public let results = PublishSubject<[CellViewModel]>()
+    //MARK: - Output
+    public let cells = PublishSubject<[CellViewModel]>()
+    public let title: Observable<String>
+    
     public var state: CurrentState = .completed
-    public var title: Observable<String>
     
-    lazy var fetchedResultsController: NSFetchedResultsController<NewsEntity> = {
-        
-        let fetchRequest = NSFetchRequest<NewsEntity>(entityName: NewsEntity.entityName)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "publishedAt", ascending: false)]
-        
-        let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
-                                                    managedObjectContext: dataManager.viewContext,
-                                                    sectionNameKeyPath: nil, cacheName: nil)
-        
-        return controller
-    }()
-    
-    public func initialFetchData() {
-        fetchFromCoreData()
-        updateData(for: .firstPage)
-    }
-    
-    private func fetchFromCoreData() {
-        
-        do {
-            try fetchedResultsController.performFetch()
-            let cellViewModels = (fetchedResultsController.fetchedObjects ?? [NewsEntity]()).map { CellViewModel(for: $0) }
-            results.onNext(cellViewModels)
-            state = .completed
-        } catch {
-            let error = error as NSError
-            fatalError("Unresolved error \(error), \(error.userInfo)")
-        }
-    }
-    
-    public func updateData(for page: PageType) {
+    private func updateData(for pageType: PageType) {
         
         state = .loading
         
-        switch page {
+        switch pageType {
         case .firstPage:
             currentPage = 1
         case .nextPage:
             currentPage += 1
         }
         
-        dataManager.fetchData(request: mockRequest, page: currentPage)
-    }
-
-    public func cellViewModel(for indexPath: IndexPath) -> CellViewModel {
-        
-        let object = fetchedResultsController.object(at: indexPath)
-        let cellViewModel = CellViewModel(for: object)
-        
-        return cellViewModel
+        DispatchQueue.global().async {
+            self.dataManager.fetchNewData(request: self.mockRequest, page: self.currentPage)
+        }
     }
     
-    func bindToManagerTrigger() {
+    func bindToDataManager() {
         
-        dataManager.trigger
+        fetchTrigger
+            .subscribe(onNext: { [unowned self] fetchType in
+                switch fetchType {
+                case .initial:
+                    self.dataManager.fetchSavedData()
+                    self.updateData(for: .firstPage)
+                case .update(let pageType):
+                    self.updateData(for: pageType)
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        dataManager.findings
             .subscribe(onNext: { [unowned self] result in
                 switch result {
-                case .failure(let error):
+                case .failure:
                     self.currentPage -= 1
-                    self.state = .completed
-                    print(error.localizedDescription)
-                case .success:
-                    self.fetchFromCoreData()
+                case .success(let cellViewModels):
+                    self.cells.onNext(cellViewModels)
                 }
+                self.state = .completed
             })
             .disposed(by: disposeBag)
     }
@@ -107,7 +84,7 @@ final class MainViewModel: MainViewModelType {
         dataManager = manager
         
         title = Observable.of("Tochka news")
-        bindToManagerTrigger()
+        bindToDataManager()
     }
 }
 
@@ -117,4 +94,9 @@ enum PageType {
 
 enum CurrentState {
     case completed, loading
+}
+
+enum FetchType {
+    case initial
+    case update(PageType)
 }

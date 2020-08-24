@@ -10,34 +10,61 @@ import Foundation
 import CoreData
 import RxSwift
 
-typealias FetchCompletion = (Result<Any, Error>) -> Void
-
 protocol DataManagerType {
     
-    var viewContext: NSManagedObjectContext { get }
-    var trigger: PublishSubject<Result<Any, Error>> { get }
+    var findings: PublishSubject<Result<[CellViewModel], Error>> { get }
     
-    func fetchData(request: String, page: Int)
+    func fetchSavedData()
+    func fetchNewData(request: String, page: Int)
 }
 
 class DataManager: DataManagerType {
     
     private var persistentContainer: NSPersistentContainer
     private let networkManager: NetworkManagerType
-    
-    var viewContext: NSManagedObjectContext {
-        return persistentContainer.viewContext
-    }
-    
-    private(set) var trigger = PublishSubject<Result<Any, Error>>()
-    
-    init(persistentContainer: NSPersistentContainer, networkManager: NetworkManagerType) {
         
-        self.persistentContainer = persistentContainer
-        self.networkManager = networkManager
+    private(set) var findings = PublishSubject<Result<[CellViewModel], Error>>()
+    private var trigger = PublishSubject<Result<Any, Error>>()
+    private let disposeBag = DisposeBag()
+
+    lazy var fetchedResultsController: NSFetchedResultsController<NewsEntity> = {
+        
+        let fetchRequest = NSFetchRequest<NewsEntity>(entityName: NewsEntity.entityName)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "publishedAt", ascending: false)]
+        
+        let controller = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                    managedObjectContext: persistentContainer.viewContext,
+                                                    sectionNameKeyPath: nil, cacheName: nil)
+        return controller
+    }()
+    
+    private func bindTrigger() {
+        
+        trigger
+            .subscribe(onNext: { [unowned self] result in
+                switch result {
+                case .failure(let error):
+                    print(error)
+                case .success:
+                    self.fetchSavedData()
+                }
+            })
+            .disposed(by: disposeBag)
+    }
+
+    public func fetchSavedData() {
+        
+        do {
+            try fetchedResultsController.performFetch()
+            let cellViewModels = (fetchedResultsController.fetchedObjects ?? [NewsEntity]()).map { CellViewModel(for: $0) }
+            findings.onNext(.success(cellViewModels))
+        } catch {
+            let error = error as NSError
+            fatalError("Unresolved error \(error), \(error.userInfo)")
+        }
     }
     
-    func fetchData(request: String, page: Int) {
+    public func fetchNewData(request: String, page: Int) {
         
         networkManager.getData(request: request, page: page) { [weak self] result in
             
@@ -59,6 +86,7 @@ class DataManager: DataManagerType {
     private func syncData(dataNews: [News], taskContext: NSManagedObjectContext?) {
         
         guard let taskContext = taskContext else {
+            trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": ""])))
             return
         }
         
@@ -106,5 +134,13 @@ class DataManager: DataManagerType {
                 taskContext.reset()
             }
         }
+    }
+
+     init(persistentContainer: NSPersistentContainer, networkManager: NetworkManagerType) {
+        
+        self.persistentContainer = persistentContainer
+        self.networkManager = networkManager
+
+        bindTrigger()
     }
 }
