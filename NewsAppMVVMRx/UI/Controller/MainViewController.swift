@@ -9,14 +9,17 @@
 import UIKit
 import SnapKit
 import RxSwift
+import RxCocoa
 import RxDataSources
 
 typealias Section = AnimatableSectionModel<String, CellViewModel>
 
 class MainViewController: UIViewController {
     
-    private var viewModel: MainViewModelType?
-    private var table: UITableView
+    private var viewModel: MainViewModel?
+    private var tableView: UITableView
+    private var refreshControl: UIRefreshControl
+    
     private let disposeBag = DisposeBag()
     
     private let dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
@@ -28,62 +31,63 @@ class MainViewController: UIViewController {
     )
     
     private func setupUI() {
-        
-        let refreshControl: UIRefreshControl = {
-            let refreshControl = UIRefreshControl()
-            refreshControl
-                .rx.controlEvent(UIControl.Event.valueChanged)
-                .subscribe(onNext: { [unowned self] in
-                    self.viewModel?.fetchTrigger.onNext(.initial)
-                    refreshControl.endRefreshing()
-                    })
-                .disposed(by: disposeBag)
-            return refreshControl
-        }()
-        
-        table = {
-            let table = UITableView()
-            table.refreshControl = refreshControl
-            table.delegate = self
-            table.allowsSelection = false
-            table.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
-            
-            return table
-        }()
 
-        view.addSubview(table)
-        table.snp.makeConstraints { (make) in
+        tableView.refreshControl = refreshControl
+        tableView.delegate = self
+        tableView.allowsSelection = false
+        tableView.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
+
+        view.addSubview(tableView)
+        
+        tableView.snp.makeConstraints { (make) in
             make.size.equalToSuperview()
         }
     }
     
-    private func bindingViewModel() {
+    private func bindViewModel() {
         
-        viewModel?.title
-            .subscribe(onNext: { [unowned self] text in
-                self.title = text
+        guard let viewModel = viewModel else { return }
+        
+        let appearObservable = rx.viewWillAppear.asObservable()
+        let refreshObservable = refreshControl.rx.controlEvent(UIControl.Event.valueChanged).asObservable()
+        
+        let sourse = Observable.of(appearObservable, refreshObservable).merge().asDriver(onErrorJustReturn: ())
+            
+        let input = MainViewModel.Input(fetchTrigger: sourse , reachedBottomTrigger: tableView.rx.reachedBottom.asObservable())
+        
+        let output = viewModel.transform(input: input)
+        
+        output.title.asObservable()
+            .subscribe(onNext: { [weak self] title in
+                self?.title = title
             })
             .disposed(by: disposeBag)
         
-        viewModel?.cells
+        output.cells
             .map { cellViewModels -> [Section] in
                 [Section(model: "1", items: cellViewModels)]
             }
-            .bind(to: table.rx.items(dataSource: dataSource))
+            .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
+        
+        output.isLoading
+            .drive(refreshControl.rx.isRefreshing)
+            .disposed(by: disposeBag)
+    
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
-        bindingViewModel()
-        viewModel?.fetchTrigger.onNext(.initial)
+        bindViewModel()
+        //viewModel?.fetchTrigger.onNext(.initial)
     }
 
-    init(viewModel: MainViewModelType) {
+    init(viewModel: MainViewModel) {
         self.viewModel = viewModel
-        self.table = UITableView()
+        self.tableView = UITableView()
+        self.refreshControl = UIRefreshControl()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -94,13 +98,36 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UITableViewDelegate {
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let diff = contentHeight - scrollView.frame.height
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let offsetY = scrollView.contentOffset.y
+//        let contentHeight = scrollView.contentSize.height
+//        let diff = contentHeight - scrollView.frame.height
 
-        if offsetY > 0 && offsetY > (diff + 100) && viewModel?.state == .completed {
-            viewModel?.fetchTrigger.onNext(.update(.nextPage))
+//        if offsetY > 0 && offsetY > (diff + 100) && viewModel?.state == .completed {
+//            viewModel?.fetchTrigger.onNext(.update(.nextPage))
+//        }
+//    }
+}
+
+extension Reactive where Base: UIViewController {
+    var viewWillAppear: ControlEvent<Void> {
+        let source = self.methodInvoked(#selector(Base.viewWillAppear(_:))).map { _ in }
+        return ControlEvent(events: source)
+    }
+}
+
+extension Reactive where Base: UIScrollView {
+    var reachedBottom: ControlEvent<Void> {
+        let observable = contentOffset
+            .flatMap { [weak base] contentOffset -> Observable<Void> in
+                guard let scrollView = base else { return Observable.empty() }
+
+                let visibleHeight = scrollView.frame.height - scrollView.contentInset.top - scrollView.contentInset.bottom
+                let y = contentOffset.y + scrollView.contentInset.top
+                let threshold = max(0.0, scrollView.contentSize.height - visibleHeight)
+
+                return y > threshold ? Observable.just(()) : Observable.empty()
         }
+        return ControlEvent(events: observable)
     }
 }

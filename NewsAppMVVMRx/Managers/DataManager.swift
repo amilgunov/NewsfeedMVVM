@@ -12,7 +12,7 @@ import RxSwift
 
 protocol DataManagerType {
     
-    var findings: PublishSubject<Result<[CellViewModel], Error>> { get }
+    var observableData: PublishSubject<[NewsEntity]> { get }
     
     func fetchSavedData()
     func fetchNewData(request: String, page: Int)
@@ -23,7 +23,7 @@ class DataManager: DataManagerType {
     private var persistentContainer: NSPersistentContainer
     private let networkManager: NetworkManagerType
         
-    private(set) var findings = PublishSubject<Result<[CellViewModel], Error>>()
+    private(set) var observableData = PublishSubject<[NewsEntity]>()
     private var trigger = PublishSubject<Result<Any, Error>>()
     private let disposeBag = DisposeBag()
 
@@ -56,8 +56,8 @@ class DataManager: DataManagerType {
         
         do {
             try fetchedResultsController.performFetch()
-            let cellViewModels = (fetchedResultsController.fetchedObjects ?? [NewsEntity]()).map { CellViewModel(for: $0) }
-            findings.onNext(.success(cellViewModels))
+            let newsEntities = (fetchedResultsController.fetchedObjects ?? [NewsEntity]())
+            observableData.onNext(newsEntities)
         } catch {
             let error = error as NSError
             fatalError("Unresolved error \(error), \(error.userInfo)")
