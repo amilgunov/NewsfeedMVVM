@@ -89,10 +89,10 @@
 				5BC05E4E24E471FD0031DA81 /* App */,
 				5B79676D24D29BF5007581B1 /* Model */,
 				5BC05E5824E477790031DA81 /* Helper */,
-				5BC05E5224E474F50031DA81 /* Manager */,
+				5BC05E5224E474F50031DA81 /* Managers */,
 				5B79676424D29B55007581B1 /* UI */,
 				5BC05E5524E475EA0031DA81 /* Resources */,
-				5BC05E4F24E472510031DA81 /* Extension */,
+				5BC05E4F24E472510031DA81 /* Extensions */,
 			);
 			path = NewsAppMVVMRx;
 			sourceTree = "<group>";
@@ -125,22 +125,22 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		5BC05E4F24E472510031DA81 /* Extension */ = {
+		5BC05E4F24E472510031DA81 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				5B79677024D29C66007581B1 /* ImageViewExtension.swift */,
 			);
-			path = Extension;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
-		5BC05E5224E474F50031DA81 /* Manager */ = {
+		5BC05E5224E474F50031DA81 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
 				5B79676224D29B0C007581B1 /* CoreDataStack.swift */,
 				5B79677224D29C84007581B1 /* DataManager.swift */,
 				5B79677424D29CA1007581B1 /* NetworkManager.swift */,
 			);
-			path = Manager;
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		5BC05E5524E475EA0031DA81 /* Resources */ = {
