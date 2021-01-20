@@ -6,8 +6,6 @@
 //  Copyright © 2020 Alexander Milgunov. All rights reserved.
 //
 
-import Foundation
-import CoreData
 import RxSwift
 import RxCocoa
 
@@ -20,7 +18,6 @@ protocol MainViewModelType {
 }
 
 final class MainViewModel: MainViewModelType {
-    
     
     private var dataManager: DataManagerType
     private let page = BehaviorRelay<Int>(value: 1)
@@ -43,7 +40,7 @@ final class MainViewModel: MainViewModelType {
     
     //MARK: - Outputs
     struct Output {
-        let cells: PublishSubject<[CellViewModel]>
+        let cells: Observable<[CellViewModel]>
         let title: Driver<String>
         let isLoading: Driver<Bool>
     }
@@ -56,6 +53,7 @@ final class MainViewModel: MainViewModelType {
         
         isLoading.subscribe(onNext: {
             print("IS LOADING NOW IS \($0)")
+            print(Thread.current)
         }).disposed(by: disposeBag)
         
         input.fetchTrigger.asObservable()
@@ -63,10 +61,8 @@ final class MainViewModel: MainViewModelType {
             .bind(to: isLoading)
             .disposed(by: disposeBag)
             
-        
         input.fetchTrigger.asObservable()
             .subscribe(onNext: { [unowned self] in
-                
                 self.dataManager.fetchSavedData()
             })
             .disposed(by: disposeBag)
@@ -75,7 +71,7 @@ final class MainViewModel: MainViewModelType {
 //            .withLatestFrom(isLoading)
 //            .filter { !$0 }
             .subscribe(onNext: { [weak self] in
-                var page = (self?.page.value ?? 1) + 1
+                let page = (self?.page.value ?? 1) + 1
                 self?.page.accept(page)
                 print(page)
             })
@@ -86,18 +82,15 @@ final class MainViewModel: MainViewModelType {
             .bind(to: isLoading)
             .disposed(by: disposeBag)
         
-        dataManager.observableData
-            .map { $0.map { CellViewModel(for: $0) }
+        let cells = dataManager.observableData
+            .map {
+                $0.map { CellViewModel(for: $0) }
             }
-            .subscribe(onNext: { [unowned self] cellViewModels in
-                self.cells.onNext(cellViewModels)
-                self.state = .completed
-                self.isLoading.onNext(false)
-            })
-            .disposed(by: disposeBag)
         
-        return Output(cells: self.cells,
-                      title: Observable.just("News App").asDriver(onErrorJustReturn: ""),
+        let title = Observable.just("News App").asDriver(onErrorJustReturn: "")
+        
+        return Output(cells: cells,
+                      title: title,
                       isLoading: isLoading.asDriver(onErrorJustReturn: false))
     }
     
@@ -111,10 +104,6 @@ final class MainViewModel: MainViewModelType {
         case .nextPage:
             currentPage += 1
         }
-        
-//        DispatchQueue.global().async {
-//            self.dataManager.fetchNewData(request: self.mockRequest, page: self.currentPage)
-//        }
     }
     
     init(with manager: DataManagerType) {

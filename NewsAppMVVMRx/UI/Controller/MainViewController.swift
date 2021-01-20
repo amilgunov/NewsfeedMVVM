@@ -81,7 +81,6 @@ class MainViewController: UIViewController {
         
         setupUI()
         bindViewModel()
-        //viewModel?.fetchTrigger.onNext(.initial)
     }
 
     init(viewModel: MainViewModel) {
