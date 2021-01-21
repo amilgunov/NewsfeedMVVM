@@ -13,7 +13,8 @@ import RxDataSources
 
 protocol CellViewModelType {
     
-    var identitySubject: String { get }
+    var identity: String { get }
+    var publishedAt: Date { get }
     var title:      Driver<String> { get }
     var author:     Driver<String> { get }
     var urlToImage: Observable<String> { get }
@@ -21,7 +22,8 @@ protocol CellViewModelType {
 
 final class CellViewModel: CellViewModelType, IdentifiableType, Equatable {
     
-    let identitySubject: String
+    let identity: String
+    let publishedAt: Date
     let title:      Driver<String>
     let author:     Driver<String>
     let urlToImage: Observable<String>
@@ -30,7 +32,8 @@ final class CellViewModel: CellViewModelType, IdentifiableType, Equatable {
         
         let date = NewsEntity.dateFormatter.string(from: news.publishedAt ?? Date())
         
-        identitySubject = (news.title ?? "") + date
+        identity = (news.title ?? "") + news.description.prefix(10) + date
+        publishedAt = news.publishedAt ?? Date()
         title = Observable.of(news.title ?? "").asDriver(onErrorJustReturn: "")
         author = Observable.of((news.author ?? "") + " at " + date).asDriver(onErrorJustReturn: "")
         urlToImage = Observable.of(news.urlToImage ?? "")
@@ -38,12 +41,13 @@ final class CellViewModel: CellViewModelType, IdentifiableType, Equatable {
 }
 
 extension CellViewModel {
-    
-    public var identity: String {
-      return identitySubject
-    }
-    
     static func == (lhs: CellViewModel, rhs: CellViewModel) -> Bool {
         return lhs.identity == rhs.identity
+    }
+}
+
+extension CellViewModel: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identity)
     }
 }

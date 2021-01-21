@@ -20,110 +20,83 @@ protocol MainViewModelType {
 final class MainViewModel: MainViewModelType {
     
     private var dataManager: DataManagerType
-    private let page = BehaviorRelay<Int>(value: 1)
+    private let isLoading = PublishSubject<Bool>()
+    private let pageTrigger = BehaviorRelay<Int>(value: 1)
     
-    private var currentPage: Int
-    private let mockRequest = "apple"
     private let disposeBag = DisposeBag()
-    
-    private let fetchTrigger = PublishSubject<FetchType>()
-    private let reachedBottomTrigger = PublishSubject<Void>()
-    
-    let isLoading = PublishSubject<Bool>()
-
     
     //MARK: - Inputs
     struct Input {
-        let fetchTrigger: Driver<Void>
-        let reachedBottomTrigger: Observable<Void>
+        let fetchTopTrigger: Driver<Void>
+        let reachedBottomTrigger: Driver<Void>
     }
     
     //MARK: - Outputs
     struct Output {
-        let cells: Observable<[CellViewModel]>
-        let title: Driver<String>
         let isLoading: Driver<Bool>
+        let title: Driver<String>
+        let cells: Driver<[CellViewModel]>
     }
-    public let cells = PublishSubject<[CellViewModel]>()
-    public let title: Observable<String>
-    
-    public var state: CurrentState = .completed
     
     func transform(input: Input) -> Output {
         
-        isLoading.subscribe(onNext: {
-            print("IS LOADING NOW IS \($0)")
-            print(Thread.current)
-        }).disposed(by: disposeBag)
+        let scheduler = ConcurrentDispatchQueueScheduler(qos: .default)
         
-        input.fetchTrigger.asObservable()
-            .flatMap { Observable<Bool>.just(true) }
-            .bind(to: isLoading)
-            .disposed(by: disposeBag)
-            
-        input.fetchTrigger.asObservable()
-            .subscribe(onNext: { [unowned self] in
-                self.dataManager.fetchSavedData()
-            })
-            .disposed(by: disposeBag)
+        // MARK: - Request to data manager
         
-        input.reachedBottomTrigger
-//            .withLatestFrom(isLoading)
-//            .filter { !$0 }
-            .subscribe(onNext: { [weak self] in
-                let page = (self?.page.value ?? 1) + 1
-                self?.page.accept(page)
-                print(page)
-            })
+        /// pageTrigger -> page #1 when triggered TOP
+        input.fetchTopTrigger.asObservable()
+            .observeOn(scheduler)
+            .map { 1 }
+            .bind(to: pageTrigger)
+            .disposed(by: disposeBag)
+
+        /// pageTrigger -> page #+1 when triggered BOTTOM
+        input.reachedBottomTrigger.asObservable().share()
+            .observeOn(scheduler)
+            .withLatestFrom(isLoading)
+            .filter { !$0 }
+            .map { [unowned self] _ in (pageTrigger.value + 1) }
+            .bind(to: pageTrigger)
             .disposed(by: disposeBag)
         
-        dataManager.observableData.share()
-            .flatMap { _ in Observable<Bool>.just(false) }
+        pageTrigger.subscribe(onNext: { print("current page is: \($0)") }).disposed(by: disposeBag)
+        
+        /// Start isLoading
+        pageTrigger
+            .map { _ in true }
             .bind(to: isLoading)
             .disposed(by: disposeBag)
         
-        let cells = dataManager.observableData
-            .map {
-                $0.map { CellViewModel(for: $0) }
-            }
+        /// Request to data manager
+        pageTrigger
+            .bind(to: dataManager.fetchNewDataTrigger)
+            .disposed(by: disposeBag)
         
-        let title = Observable.just("News App").asDriver(onErrorJustReturn: "")
         
-        return Output(cells: cells,
-                      title: title,
-                      isLoading: isLoading.asDriver(onErrorJustReturn: false))
-    }
-    
-    private func updateData(for pageType: PageType) {
+        // MARK: - Receive data from data manager
         
-        state = .loading
+        let observableData = dataManager.observableData.delay(.seconds(2), scheduler: scheduler).share()
         
-        switch pageType {
-        case .firstPage:
-            currentPage = 1
-        case .nextPage:
-            currentPage += 1
-        }
+        let titleDriver = isLoading
+            .map { $0 ? "Loading..." : "Newsfeed" }
+            .asDriver(onErrorJustReturn: "Something goes wrong...")
+        
+        let cellsDriver = observableData
+            .map { $0.map { CellViewModel(for: $0) } }
+            .map { Array(Set($0)).sorted(by: { $0.publishedAt > $1.publishedAt }) }
+            .asDriver(onErrorJustReturn: [])
+        
+        observableData
+            .catchErrorJustReturn([])
+            .map { _ in false }
+            .bind(to: isLoading)
+            .disposed(by: disposeBag)
+        
+        return Output(isLoading: isLoading.asDriver(onErrorJustReturn: false), title: titleDriver, cells: cellsDriver)
     }
     
     init(with manager: DataManagerType) {
-        
-        currentPage = 0
         dataManager = manager
-        
-        title = Observable.of("News App MVVM+Rx")
     }
-}
-
-enum PageType {
-    case firstPage, nextPage
-}
-
-enum CurrentState {
-    case completed, loading
-}
-
-enum FetchType {
-    case initial
-    case update(PageType)
 }
