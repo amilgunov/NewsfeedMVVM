@@ -20,7 +20,7 @@ protocol CellViewModelType {
     var urlToImage: Observable<String> { get }
 }
 
-final class CellViewModel: CellViewModelType, IdentifiableType, Equatable {
+final class CellViewModel: CellViewModelType, IdentifiableType {
     
     let identity: String
     let publishedAt: Date
@@ -40,7 +40,7 @@ final class CellViewModel: CellViewModelType, IdentifiableType, Equatable {
     }
 }
 
-extension CellViewModel {
+extension CellViewModel: Equatable {
     static func == (lhs: CellViewModel, rhs: CellViewModel) -> Bool {
         return lhs.identity == rhs.identity
     }

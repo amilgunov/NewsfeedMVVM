@@ -47,7 +47,9 @@ final class MainViewModel: MainViewModelType {
         /// pageTrigger -> page #1 when triggered TOP
         input.fetchTopTrigger.asObservable()
             .observeOn(scheduler)
-            .map { 1 }
+            .withLatestFrom(isLoading)
+            .filter { !$0 }
+            .map { _ in 1 }
             .bind(to: pageTrigger)
             .disposed(by: disposeBag)
 
@@ -56,11 +58,10 @@ final class MainViewModel: MainViewModelType {
             .observeOn(scheduler)
             .withLatestFrom(isLoading)
             .filter { !$0 }
-            .map { [unowned self] _ in (pageTrigger.value + 1) }
+            .withLatestFrom(pageTrigger)
+            .map { $0 + 1 }
             .bind(to: pageTrigger)
             .disposed(by: disposeBag)
-        
-        pageTrigger.subscribe(onNext: { print("current page is: \($0)") }).disposed(by: disposeBag)
         
         /// Start isLoading
         pageTrigger
@@ -73,6 +74,10 @@ final class MainViewModel: MainViewModelType {
             .bind(to: dataManager.fetchNewDataTrigger)
             .disposed(by: disposeBag)
         
+        pageTrigger
+            .subscribe(onNext: { print("Current page is \($0)")})
+            .disposed(by: disposeBag)
+        
         
         // MARK: - Receive data from data manager
         
@@ -83,8 +88,8 @@ final class MainViewModel: MainViewModelType {
             .asDriver(onErrorJustReturn: "Something goes wrong...")
         
         let cellsDriver = observableData
-            .map { $0.map { CellViewModel(for: $0) } }
-            .map { Array(Set($0)).sorted(by: { $0.publishedAt > $1.publishedAt }) }
+            .map { $0.map { CellViewModel(for: $0) }.unique() }
+            .map { $0.sorted { $0.publishedAt > $1.publishedAt } }
             .asDriver(onErrorJustReturn: [])
         
         observableData
@@ -100,3 +105,6 @@ final class MainViewModel: MainViewModelType {
         dataManager = manager
     }
 }
+
+
+

@@ -14,9 +14,6 @@ protocol DataManagerType {
     
     var fetchNewDataTrigger: PublishSubject<Int> { get }
     var observableData: PublishSubject<[NewsEntity]> { get }
-    
-    func fetchSavedData()
-    func fetchNewData(page: Int)
 }
 
 class DataManager: DataManagerType {

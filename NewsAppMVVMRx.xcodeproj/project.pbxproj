@@ -13,6 +13,7 @@
 		5B3B48BE24D297F7004A6304 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B48BD24D297F7004A6304 /* Assets.xcassets */; };
 		5B3B48C124D297F7004A6304 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B48BF24D297F7004A6304 /* LaunchScreen.storyboard */; };
 		5B46A1DB25B9557100A6DA33 /* Reactive+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B46A1DA25B9557100A6DA33 /* Reactive+Extensions.swift */; };
+		5B46A1E025B9E40F00A6DA33 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B46A1DF25B9E40F00A6DA33 /* Array+Extensions.swift */; };
 		5B79676324D29B0C007581B1 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676224D29B0C007581B1 /* CoreDataStack.swift */; };
 		5B79676624D29B72007581B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676524D29B72007581B1 /* MainViewController.swift */; };
 		5B79676824D29B95007581B1 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676724D29B95007581B1 /* MainViewModel.swift */; };
@@ -40,6 +41,7 @@
 		5B3B48C024D297F7004A6304 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5B3B48C224D297F7004A6304 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B46A1DA25B9557100A6DA33 /* Reactive+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactive+Extensions.swift"; sourceTree = "<group>"; };
+		5B46A1DF25B9E40F00A6DA33 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		5B79676224D29B0C007581B1 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		5B79676524D29B72007581B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		5B79676724D29B95007581B1 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 			children = (
 				5B79677024D29C66007581B1 /* UIImageView+Extension.swift */,
 				5B46A1DA25B9557100A6DA33 /* Reactive+Extensions.swift */,
+				5B46A1DF25B9E40F00A6DA33 /* Array+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -321,6 +324,7 @@
 				5B79677524D29CA1007581B1 /* NetworkManager.swift in Sources */,
 				5B79676A24D29BCD007581B1 /* CellViewModel.swift in Sources */,
 				5BC05E5424E475800031DA81 /* APIModel.swift in Sources */,
+				5B46A1E025B9E40F00A6DA33 /* Array+Extensions.swift in Sources */,
 				5B79676C24D29BEA007581B1 /* CellViewController.swift in Sources */,
 				5B79677124D29C66007581B1 /* UIImageView+Extension.swift in Sources */,
 				5BC05E5124E4737F0031DA81 /* APISettings.swift in Sources */,
