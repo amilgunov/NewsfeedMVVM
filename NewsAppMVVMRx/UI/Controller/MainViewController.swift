@@ -9,14 +9,18 @@
 import UIKit
 import SnapKit
 import RxSwift
+import RxCocoa
 import RxDataSources
 
 typealias Section = AnimatableSectionModel<String, CellViewModel>
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, UITableViewDelegate {
     
-    private var viewModel: MainViewModelType?
-    private var table: UITableView
+    private var viewModel: MainViewModel?
+    private var tableView: UITableView
+    private var refreshControl: UIRefreshControl
+    private var activityIndicator: UIActivityIndicatorView
+    
     private let disposeBag = DisposeBag()
     
     private let dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
@@ -27,80 +31,81 @@ class MainViewController: UIViewController {
         }
     )
     
-    private func setupUI() {
+    private func bindViewModel() {
         
-        let refreshControl: UIRefreshControl = {
-            let refreshControl = UIRefreshControl()
-            refreshControl
-                .rx.controlEvent(UIControl.Event.valueChanged)
-                .subscribe(onNext: { [unowned self] in
-                    self.viewModel?.fetchTrigger.onNext(.initial)
-                    refreshControl.endRefreshing()
-                    })
-                .disposed(by: disposeBag)
-            return refreshControl
-        }()
+        guard let viewModel = viewModel else { return }
         
-        table = {
-            let table = UITableView()
-            table.refreshControl = refreshControl
-            table.delegate = self
-            table.allowsSelection = false
-            table.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
+        //MARK: - ViewModel Inputs
+        let appearObservable = rx.viewWillAppear.asDriver()
+        let refreshObservable = refreshControl.rx.controlEvent(UIControl.Event.valueChanged).asDriver()
+        
+        let fetchTopTrigger = Driver.of(appearObservable, refreshObservable).merge()
+        let reachedBottomTrigger = tableView.rx.reachedBottom.asDriver()
             
-            return table
-        }()
-
-        view.addSubview(table)
-        table.snp.makeConstraints { (make) in
-            make.size.equalToSuperview()
-        }
-    }
-    
-    private func bindingViewModel() {
+        let input = MainViewModel.Input(fetchTopTrigger: fetchTopTrigger , reachedBottomTrigger: reachedBottomTrigger)
         
-        viewModel?.title
-            .subscribe(onNext: { [unowned self] text in
-                self.title = text
-            })
+        //MARK: - ViewModel Outputs
+        let output = viewModel.transform(input: input)
+        
+        output.isLoading
+            .drive(refreshControl.rx.isRefreshing)
             .disposed(by: disposeBag)
         
-        viewModel?.cells
+        output.isLoading
+            .map { !$0 }
+            .drive(activityIndicator.rx.isHidden)
+            .disposed(by: disposeBag)
+        
+        output.title
+            .drive(rx.title)
+            .disposed(by: disposeBag)
+        
+        output.cells.asObservable()
             .map { cellViewModels -> [Section] in
                 [Section(model: "1", items: cellViewModels)]
             }
-            .bind(to: table.rx.items(dataSource: dataSource))
+            .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        activityIndicator.startAnimating()
+        activityIndicator.isHidden = true
+        return activityIndicator
+    }
+    
+    private func setupUI() {
+
+        tableView.refreshControl = refreshControl
+        tableView.delegate = self
+        tableView.allowsSelection = false
+        tableView.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
+
+        view.addSubview(tableView)
+        
+        tableView.snp.makeConstraints { (make) in
+            make.size.equalToSuperview()
+        }
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
-        bindingViewModel()
-        viewModel?.fetchTrigger.onNext(.initial)
+        bindViewModel()
     }
 
-    init(viewModel: MainViewModelType) {
+    init(viewModel: MainViewModel) {
         self.viewModel = viewModel
-        self.table = UITableView()
+        self.tableView = UITableView()
+        self.refreshControl = UIRefreshControl()
+        self.activityIndicator = UIActivityIndicatorView()
+        
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension MainViewController: UITableViewDelegate {
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let offsetY = scrollView.contentOffset.y
-        let contentHeight = scrollView.contentSize.height
-        let diff = contentHeight - scrollView.frame.height
-
-        if offsetY > 0 && offsetY > (diff + 100) && viewModel?.state == .completed {
-            viewModel?.fetchTrigger.onNext(.update(.nextPage))
-        }
     }
 }

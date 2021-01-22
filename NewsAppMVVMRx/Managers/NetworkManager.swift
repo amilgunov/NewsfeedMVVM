@@ -14,7 +14,7 @@ typealias FetchCompletion = (Result<Any, Error>) -> Void
 protocol NetworkManagerType: class {
     
     static var shared: NetworkManagerType { get }
-    func getData(request: String, page: Int, _ completion: @escaping FetchCompletion)
+    func getData(page: Int, _ completion: @escaping FetchCompletion)
     func getImageData(from: String, _ completion: @escaping FetchCompletion)
 }
 
@@ -23,11 +23,11 @@ class NetworkManager: NetworkManagerType {
     private let apiSettings = APISettings()
     
     static let shared: NetworkManagerType = NetworkManager()
+    let queue = DispatchQueue(label: "networkQueue", qos: .utility, attributes: .concurrent)
     
-    func getData(request: String, page: Int, _ completion: @escaping FetchCompletion) {
+    func getData(page: Int, _ completion: @escaping FetchCompletion) {
         
-        let parameters: Parameters = ["q": request, "apiKey": apiSettings.apiKey, "page": page]
-        let queue = DispatchQueue(label: "networkQueue", qos: .default, attributes: .concurrent)
+        let parameters: Parameters = ["country": apiSettings.country, "category": apiSettings.category, "apiKey": apiSettings.apiKey, "page": page]
         
         AF.request(apiSettings.url, method: .get, parameters: parameters).validate().responseDecodable(of: NewsFeed.self, queue: queue, decoder: JSONDecoder()) { newsResponse in
             
@@ -41,8 +41,6 @@ class NetworkManager: NetworkManagerType {
     }
     
     func getImageData(from: String, _ completion: @escaping FetchCompletion) {
-        
-        let queue = DispatchQueue(label: "networkQueue", qos: .userInitiated, attributes: .concurrent)
         
         AF.request(from, method: .get).validate().responseData(queue: queue) { response in
             

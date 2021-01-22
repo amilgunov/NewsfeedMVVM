@@ -12,18 +12,18 @@ import RxSwift
 
 protocol DataManagerType {
     
-    var findings: PublishSubject<Result<[CellViewModel], Error>> { get }
-    
-    func fetchSavedData()
-    func fetchNewData(request: String, page: Int)
+    var fetchNewDataTrigger: PublishSubject<Int> { get }
+    var observableData: PublishSubject<[NewsEntity]> { get }
 }
 
 class DataManager: DataManagerType {
     
+    public let fetchNewDataTrigger = PublishSubject<Int>()
+    
     private var persistentContainer: NSPersistentContainer
     private let networkManager: NetworkManagerType
         
-    private(set) var findings = PublishSubject<Result<[CellViewModel], Error>>()
+    private(set) var observableData = PublishSubject<[NewsEntity]>()
     private var trigger = PublishSubject<Result<Any, Error>>()
     private let disposeBag = DisposeBag()
 
@@ -40,11 +40,18 @@ class DataManager: DataManagerType {
     
     private func bindTrigger() {
         
+        fetchNewDataTrigger
+            .subscribe(onNext: {
+                self.fetchNewData(page: $0)
+            })
+            .disposed(by: disposeBag)
+        
         trigger
             .subscribe(onNext: { [unowned self] result in
                 switch result {
                 case .failure(let error):
                     print(error)
+                    self.fetchSavedData()
                 case .success:
                     self.fetchSavedData()
                 }
@@ -56,17 +63,17 @@ class DataManager: DataManagerType {
         
         do {
             try fetchedResultsController.performFetch()
-            let cellViewModels = (fetchedResultsController.fetchedObjects ?? [NewsEntity]()).map { CellViewModel(for: $0) }
-            findings.onNext(.success(cellViewModels))
+            let newsEntities = (fetchedResultsController.fetchedObjects ?? [NewsEntity]())
+            observableData.onNext(newsEntities)
         } catch {
             let error = error as NSError
             fatalError("Unresolved error \(error), \(error.userInfo)")
         }
     }
     
-    public func fetchNewData(request: String, page: Int) {
+    public func fetchNewData(page: Int) {
         
-        networkManager.getData(request: request, page: page) { [weak self] result in
+        networkManager.getData(page: page) { [weak self] result in
             
             switch result {
             case .failure(let error):
@@ -77,13 +84,13 @@ class DataManager: DataManagerType {
                 taskContext?.undoManager = nil
                 
                 if let data = data as? [News] {
-                    self?.syncData(dataNews: data, taskContext: taskContext)
+                    self?.syncData(dataNews: data, taskContext: taskContext, isTopPage: page == 1)
                 }
             }
         }
     }
     
-    private func syncData(dataNews: [News], taskContext: NSManagedObjectContext?) {
+    private func syncData(dataNews: [News], taskContext: NSManagedObjectContext?, isTopPage: Bool) {
         
         guard let taskContext = taskContext else {
             trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": ""])))
@@ -92,24 +99,37 @@ class DataManager: DataManagerType {
         
         taskContext.performAndWait {
             
-            let matchingRequest = NSFetchRequest<NSFetchRequestResult>(entityName: NewsEntity.entityName)
-            let newsIds = dataNews.map { $0.title }.compactMap { $0 }
-            matchingRequest.predicate = NSPredicate(format: "title in %@", argumentArray: [newsIds])
-            
-            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: matchingRequest)
-            batchDeleteRequest.resultType = .resultTypeObjectIDs
-            
-            do {
-                let batchDeleteResult = try taskContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
-                
-                if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
-                    NSManagedObjectContext.mergeChanges(fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
-                                                        into: [self.persistentContainer.viewContext])
+            if isTopPage && dataNews.count > 0 {
+                let matchingRequest = NSFetchRequest<NSFetchRequestResult>(entityName: NewsEntity.entityName)
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: matchingRequest)
+
+                do {
+                    try taskContext.execute(deleteRequest)
+                } catch let error as NSError {
+                    //trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": error])))
                 }
-            } catch {
-                trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": error])))
-                return
+            } else {
+                let matchingRequest = NSFetchRequest<NSFetchRequestResult>(entityName: NewsEntity.entityName)
+                let newsIds = dataNews.map { $0.title }.compactMap { $0 }
+                matchingRequest.predicate = NSPredicate(format: "title in %@", argumentArray: [newsIds])
+                
+                let deleteRequest = NSBatchDeleteRequest(fetchRequest: matchingRequest)
+                deleteRequest.resultType = .resultTypeObjectIDs
+                
+                do {
+                    let deleteRequest = try taskContext.execute(deleteRequest) as? NSBatchDeleteResult
+                    
+                    if let deletedObjectIDs = deleteRequest?.result as? [NSManagedObjectID] {
+                        NSManagedObjectContext.mergeChanges(fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
+                                                            into: [self.persistentContainer.viewContext])
+                    }
+                } catch {
+                    trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": error])))
+                    return
+                }
             }
+            
+            
             
             for item in dataNews {
                 
@@ -132,6 +152,8 @@ class DataManager: DataManagerType {
                     trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": error])))
                 }
                 taskContext.reset()
+            } else {
+                trigger.onNext(.success(true))
             }
         }
     }
