@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B27E7EC25BC308300EE4962 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B27E7EB25BC308300EE4962 /* CoreDataManager.swift */; };
 		5B3B48B224D297EC004A6304 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B48B124D297EC004A6304 /* AppDelegate.swift */; };
 		5B3B48B424D297EC004A6304 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B48B324D297EC004A6304 /* SceneDelegate.swift */; };
 		5B3B48BC24D297ED004A6304 /* NewsAppMVVMRx.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B48BA24D297ED004A6304 /* NewsAppMVVMRx.xcdatamodeld */; };
@@ -33,6 +34,7 @@
 		2804846D8AC5D1266CEF451A /* Pods-NewsAppMVVMRx.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppMVVMRx.release.xcconfig"; path = "Target Support Files/Pods-NewsAppMVVMRx/Pods-NewsAppMVVMRx.release.xcconfig"; sourceTree = "<group>"; };
 		286E291B7D87F713FCB86702 /* Pods_NewsAppMVVMRx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NewsAppMVVMRx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C1FD47DDAA4CE7C30A323A5 /* Pods-NewsAppMVVMRx.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsAppMVVMRx.debug.xcconfig"; path = "Target Support Files/Pods-NewsAppMVVMRx/Pods-NewsAppMVVMRx.debug.xcconfig"; sourceTree = "<group>"; };
+		5B27E7EB25BC308300EE4962 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		5B3B48AE24D297EC004A6304 /* NewsAppMVVMRx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsAppMVVMRx.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B3B48B124D297EC004A6304 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B3B48B324D297EC004A6304 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				5B79676224D29B0C007581B1 /* CoreDataStack.swift */,
+				5B27E7EB25BC308300EE4962 /* CoreDataManager.swift */,
 				5B79677224D29C84007581B1 /* DataManager.swift */,
 				5B79677424D29CA1007581B1 /* NetworkManager.swift */,
 			);
@@ -322,6 +325,7 @@
 				5B46A1DB25B9557100A6DA33 /* Reactive+Extensions.swift in Sources */,
 				5B79676324D29B0C007581B1 /* CoreDataStack.swift in Sources */,
 				5B79677524D29CA1007581B1 /* NetworkManager.swift in Sources */,
+				5B27E7EC25BC308300EE4962 /* CoreDataManager.swift in Sources */,
 				5B79676A24D29BCD007581B1 /* CellViewModel.swift in Sources */,
 				5BC05E5424E475800031DA81 /* APIModel.swift in Sources */,
 				5B46A1E025B9E40F00A6DA33 /* Array+Extensions.swift in Sources */,

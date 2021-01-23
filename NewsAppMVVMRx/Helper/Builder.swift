@@ -18,8 +18,9 @@ class Builder: ModuleBuilder {
     func build() -> UIViewController {
        
         let container = CoreDataStack.shared.persistentContainer
+        let coreDataManager = CoreDataManager(persistentContainer: container)
         let networkManager = NetworkManager.shared
-        let dataManager = DataManager(persistentContainer: container, networkManager: networkManager)
+        let dataManager = DataManager(coreDataManager: coreDataManager, networkManager: networkManager)
         let viewModel = MainViewModel(with: dataManager)
         
         return MainViewController(viewModel: viewModel)

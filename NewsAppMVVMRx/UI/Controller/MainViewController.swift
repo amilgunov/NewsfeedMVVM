@@ -23,6 +23,8 @@ class MainViewController: UIViewController, UITableViewDelegate {
     
     private let disposeBag = DisposeBag()
     
+    private var items: Int = 0
+    
     private let dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
         
             let cell = tableView.dequeueReusableCell(withIdentifier: CellViewController.cellIdentifier)
@@ -65,6 +67,16 @@ class MainViewController: UIViewController, UITableViewDelegate {
                 [Section(model: "1", items: cellViewModels)]
             }
             .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+    
+        output.cells.asObservable()
+            .map { $0.count }
+            .subscribe(onNext: { [unowned self] cellsCount in
+                if self.items < cellsCount {
+                    self.tableView.scrollToRow(at: IndexPath(item: self.items, section: 0), at: .bottom, animated: true)
+                }
+                self.items = cellsCount
+            })
             .disposed(by: disposeBag)
     }
     
