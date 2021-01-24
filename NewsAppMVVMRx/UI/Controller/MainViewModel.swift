@@ -106,7 +106,7 @@ final class MainViewModel: MainViewModelType {
         
         dataManager.errorsObservable
             .subscribe(onNext: { error in
-                print("Error, catched in ViewModel: \(error)")
+                print("----------Error, catched in ViewModel: \(error.localizedDescription)")
             })
             .disposed(by: disposeBag)
         

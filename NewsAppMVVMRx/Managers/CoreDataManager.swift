@@ -39,15 +39,14 @@ final class CoreDataManager {
         }
     }
     
-    func syncData(dataNews: [News], isTopPage: Bool) {
+    func syncData(dataNews: [News], erase: Bool) {
         
         let taskContext = self.persistentContainer.newBackgroundContext()
         taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         taskContext.undoManager = nil
         
         taskContext.performAndWait {
-            
-            if isTopPage && dataNews.count > 0 {
+            if dataNews.count > 0 && erase {
                 let matchingRequest = NSFetchRequest<NSFetchRequestResult>(entityName: NewsEntity.entityName)
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: matchingRequest)
                 
