@@ -13,7 +13,8 @@ import RxSwift
 protocol DataManagerType {
     
     var fetchNewDataTrigger: PublishSubject<Int> { get }
-    var observableData: PublishSubject<[NewsEntity]> { get }
+    var dataObservable: PublishSubject<[NewsEntity]> { get }
+    var errorsObservable: PublishSubject<Error> { get }
 }
 
 class DataManager: DataManagerType {
@@ -22,7 +23,8 @@ class DataManager: DataManagerType {
     private let coreDataManager: CoreDataManager
     
     private(set) var fetchNewDataTrigger = PublishSubject<Int>()
-    private(set) var observableData = PublishSubject<[NewsEntity]>()
+    private(set) var dataObservable = PublishSubject<[NewsEntity]>()
+    private(set) var errorsObservable = PublishSubject<Error>()
     
     private let disposeBag = DisposeBag()
     
@@ -34,8 +36,12 @@ class DataManager: DataManagerType {
             })
             .disposed(by: disposeBag)
         
-        coreDataManager.observableData
-            .bind(to: observableData)
+        coreDataManager.coreDataObservable
+            .bind(to: dataObservable)
+            .disposed(by: disposeBag)
+        
+        coreDataManager.errorsObservable
+            .bind(to: errorsObservable)
             .disposed(by: disposeBag)
     }
 
@@ -45,13 +51,10 @@ class DataManager: DataManagerType {
             
             switch result {
             case .failure(let error):
-                //self?.trigger.onNext(.failure(error))
-            fatalError()
+                self?.errorsObservable.onNext(error)
+                self?.coreDataManager.syncData(dataNews: [News](), isTopPage: page == 1)
             case .success(let data):
-                
                 self?.coreDataManager.syncData(dataNews: data as! [News], isTopPage: page == 1)
-                
-                
             }
         }
     }
