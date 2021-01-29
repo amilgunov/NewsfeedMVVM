@@ -13,7 +13,8 @@ import RxSwift
 protocol DataManagerType {
     
     var fetchNewDataTrigger: PublishSubject<Int> { get }
-    var observableData: PublishSubject<[NewsEntity]> { get }
+    var dataObservable: PublishSubject<[NewsEntity]> { get }
+    var errorsObservable: PublishSubject<Error> { get }
 }
 
 class DataManager: DataManagerType {
@@ -22,38 +23,41 @@ class DataManager: DataManagerType {
     private let coreDataManager: CoreDataManager
     
     private(set) var fetchNewDataTrigger = PublishSubject<Int>()
-    private(set) var observableData = PublishSubject<[NewsEntity]>()
+    private(set) var dataObservable = PublishSubject<[NewsEntity]>()
+    private(set) var errorsObservable = PublishSubject<Error>()
     
     private let disposeBag = DisposeBag()
     
     private func bindTrigger() {
         
         fetchNewDataTrigger
-            .subscribe(onNext: {
-                self.fetchNewData(page: $0)
+            .subscribe(onNext: { page in
+                self.fetchNewData(page: page)
             })
             .disposed(by: disposeBag)
         
-        coreDataManager.observableData
-            .bind(to: observableData)
+        coreDataManager.coreDataObservable
+            .bind(to: dataObservable)
+            .disposed(by: disposeBag)
+        
+        coreDataManager.errorsObservable
+            .bind(to: errorsObservable)
             .disposed(by: disposeBag)
     }
 
     public func fetchNewData(page: Int) {
-        
-        networkManager.getData(page: page) { [weak self] result in
-            
-            switch result {
-            case .failure(let error):
-                //self?.trigger.onNext(.failure(error))
-            fatalError()
-            case .success(let data):
-                
-                self?.coreDataManager.syncData(dataNews: data as! [News], isTopPage: page == 1)
-                
-                
-            }
-        }
+        let scheduler = ConcurrentDispatchQueueScheduler(qos: .default)
+        networkManager.load(page: page)
+            .observeOn(scheduler)
+            .catchError({ error -> Observable<[News]> in
+                self.errorsObservable.onNext(error)
+                self.coreDataManager.syncData(dataNews: [News](), erase: false)
+                return Observable.empty()
+            })
+            .subscribe(onNext: { data in
+                self.coreDataManager.syncData(dataNews: data, erase: page == 1)
+            })
+            .disposed(by: self.disposeBag)
     }
     
      init(coreDataManager: CoreDataManager, networkManager: NetworkManagerType) {

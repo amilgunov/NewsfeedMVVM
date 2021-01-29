@@ -12,7 +12,8 @@ import RxSwift
 
 final class CoreDataManager {
     
-    private(set) var observableData = PublishSubject<[NewsEntity]>()
+    private(set) var coreDataObservable = PublishSubject<[NewsEntity]>()
+    private(set) var errorsObservable = PublishSubject<Error>()
     private var persistentContainer: NSPersistentContainer
     
     lazy var fetchedResultsController: NSFetchedResultsController<NewsEntity> = {
@@ -27,38 +28,32 @@ final class CoreDataManager {
     }()
     
     public func fetchSavedData() {
-        
         do {
             try fetchedResultsController.performFetch()
             let newsEntities = (fetchedResultsController.fetchedObjects ?? [NewsEntity]())
-            observableData.onNext(newsEntities)
+            coreDataObservable.onNext(newsEntities)
         } catch {
-            let error = error as NSError
-            fatalError("Unresolved error \(error), \(error.userInfo)")
+            let error = error
+            errorsObservable.onNext(error)
+            coreDataObservable.onNext([NewsEntity]())
         }
     }
     
-    func syncData(dataNews: [News], isTopPage: Bool) {
+    func syncData(dataNews: [News], erase: Bool) {
         
         let taskContext = self.persistentContainer.newBackgroundContext()
         taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         taskContext.undoManager = nil
         
-        //        guard let taskContext = taskContext else {
-        //            trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": ""])))
-        //            return
-        //        }
-        
         taskContext.performAndWait {
-            
-            if isTopPage && dataNews.count > 0 {
+            if dataNews.count > 0 && erase {
                 let matchingRequest = NSFetchRequest<NSFetchRequestResult>(entityName: NewsEntity.entityName)
                 let deleteRequest = NSBatchDeleteRequest(fetchRequest: matchingRequest)
                 
                 do {
                     try taskContext.execute(deleteRequest)
                 } catch let error as NSError {
-                    //trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": error])))
+                    errorsObservable.onNext(error)
                     fetchSavedData()
                 }
             } else {
@@ -77,16 +72,13 @@ final class CoreDataManager {
                                                             into: [self.persistentContainer.viewContext])
                     }
                 } catch {
-                    //trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": error])))
+                    errorsObservable.onNext(error)
                     fetchSavedData()
                     return
                 }
             }
             
-            
-            
             for item in dataNews {
-                
                 guard let news = NSEntityDescription.insertNewObject(forEntityName: NewsEntity.entityName, into: taskContext) as? NewsEntity else {
                     return
                 }
@@ -101,20 +93,13 @@ final class CoreDataManager {
             if taskContext.hasChanges {
                 do {
                     try taskContext.save()
-                    //trigger.onNext(.success(true))
-                    fetchSavedData()
                 } catch {
-                    //trigger.onNext(.failure(NSError(domain: "", code: 0, userInfo: ["Error": error])))
-                    fetchSavedData()
+                    errorsObservable.onNext(error)
                 }
                 taskContext.reset()
-            } else {
-                //trigger.onNext(.success(true))
-                fetchSavedData()
             }
+            fetchSavedData()
         }
-        
-        
     }
     
     init(persistentContainer: NSPersistentContainer) {

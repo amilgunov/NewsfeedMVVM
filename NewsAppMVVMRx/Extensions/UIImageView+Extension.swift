@@ -20,7 +20,7 @@ extension UIImageView {
             return
         }
         
-        NetworkManager.shared.getImageData(from: URLString) { [weak self] result in
+        NetworkManager().getImageData(from: URLString) { [weak self] result in
             
             switch result {
             case .failure:

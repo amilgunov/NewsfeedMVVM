@@ -81,21 +81,33 @@ final class MainViewModel: MainViewModelType {
         
         // MARK: - Receive data from data manager
         
-        let observableData = dataManager.observableData.delay(.seconds(2), scheduler: scheduler).share()
+        let dataObservable = dataManager.dataObservable.delay(.seconds(2), scheduler: scheduler).share()
         
         let titleDriver = isLoading
             .map { $0 ? "Loading..." : "Newsfeed" }
             .asDriver(onErrorJustReturn: "Something goes wrong...")
         
-        let cellsDriver = observableData
+        let cellsDriver = dataObservable
             .map { $0.map { CellViewModel(for: $0) }.unique() }
             .map { $0.sorted { $0.publishedAt > $1.publishedAt } }
             .asDriver(onErrorJustReturn: [])
         
-        observableData
+        dataObservable
             .catchErrorJustReturn([])
             .map { _ in false }
             .bind(to: isLoading)
+            .disposed(by: disposeBag)
+        
+        dataObservable
+            .subscribe(onNext: { cells in
+                print("New cells count: \(cells.count)")
+            })
+            .disposed(by: disposeBag)
+        
+        dataManager.errorsObservable
+            .subscribe(onNext: { error in
+                print("----------Error, catched in ViewModel: \(error.localizedDescription)")
+            })
             .disposed(by: disposeBag)
         
         return Output(isLoading: isLoading.asDriver(onErrorJustReturn: false), title: titleDriver, cells: cellsDriver)
