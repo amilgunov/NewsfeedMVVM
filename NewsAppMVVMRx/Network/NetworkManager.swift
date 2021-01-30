@@ -23,13 +23,13 @@ protocol NetworkManagerType: class {
 final class NetworkManager: NetworkManagerType {
 
     private(set) var newsDataObservable = PublishSubject<[News]>()
-    private let apiSettings = APISettings()
+    private let apiSettings = APIConstants()
     private let scheduler = ConcurrentDispatchQueueScheduler(qos: .default)
     
     func load(page: Int) -> Observable<[News]> {
         
         guard let url = apiSettings.url(with: page) else { return Observable.empty() }
-
+        
         return RxAlamofire.requestData(.get, url)
             .observeOn(scheduler)
             .map { response, data -> [News] in
