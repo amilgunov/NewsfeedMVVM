@@ -21,10 +21,6 @@ enum ApiRouter: URLRequestConvertible {
         
         urlRequest.httpMethod = method.rawValue
         
-//        urlRequest.setValue(Constants.ContentType.json.rawValue, forHTTPHeaderField: Constants.HttpHeaderField.acceptType.rawValue)
-//        urlRequest.setValue(Constants.ContentType.json.rawValue, forHTTPHeaderField: Constants.HttpHeaderField.contentType.rawValue)
-        
-
         let encoding: ParameterEncoding = {
             switch method {
             case .get:
@@ -57,11 +53,5 @@ enum ApiRouter: URLRequestConvertible {
             return APIConstants().url(with: page)
         }
     }
-}
-
-enum ApiError: Error {
-    case forbidden              //Status code 403
-    case notFound               //Status code 404
-    case conflict               //Status code 409
-    case internalServerError    //Status code 500
+    
 }

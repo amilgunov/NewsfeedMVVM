@@ -16,6 +16,7 @@
 		5B46A1DB25B9557100A6DA33 /* Reactive+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B46A1DA25B9557100A6DA33 /* Reactive+Extensions.swift */; };
 		5B46A1E025B9E40F00A6DA33 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B46A1DF25B9E40F00A6DA33 /* Array+Extensions.swift */; };
 		5B68A49225C5D3F2001EA6CB /* ApiRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B68A49125C5D3F2001EA6CB /* ApiRouter.swift */; };
+		5B68A49725C5DBA5001EA6CB /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B68A49625C5DBA5001EA6CB /* NetworkManager.swift */; };
 		5B79676324D29B0C007581B1 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676224D29B0C007581B1 /* CoreDataStack.swift */; };
 		5B79676624D29B72007581B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676524D29B72007581B1 /* MainViewController.swift */; };
 		5B79676824D29B95007581B1 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676724D29B95007581B1 /* MainViewModel.swift */; };
@@ -23,7 +24,7 @@
 		5B79676C24D29BEA007581B1 /* CellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676B24D29BEA007581B1 /* CellViewController.swift */; };
 		5B79677124D29C66007581B1 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79677024D29C66007581B1 /* UIImageView+Extension.swift */; };
 		5B79677324D29C84007581B1 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79677224D29C84007581B1 /* DataManager.swift */; };
-		5B79677524D29CA1007581B1 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79677424D29CA1007581B1 /* NetworkManager.swift */; };
+		5B79677524D29CA1007581B1 /* NetworkManager_.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79677424D29CA1007581B1 /* NetworkManager_.swift */; };
 		5BB74AE724F4396000E29C50 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79677724D29CFE007581B1 /* CoreDataModel.swift */; };
 		5BC05E4D24E46FFE0031DA81 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC05E4C24E46FFE0031DA81 /* Builder.swift */; };
 		5BC05E5124E4737F0031DA81 /* APIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC05E5024E4737F0031DA81 /* APIConstants.swift */; };
@@ -46,6 +47,7 @@
 		5B46A1DA25B9557100A6DA33 /* Reactive+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactive+Extensions.swift"; sourceTree = "<group>"; };
 		5B46A1DF25B9E40F00A6DA33 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		5B68A49125C5D3F2001EA6CB /* ApiRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRouter.swift; sourceTree = "<group>"; };
+		5B68A49625C5DBA5001EA6CB /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5B79676224D29B0C007581B1 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		5B79676524D29B72007581B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		5B79676724D29B95007581B1 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -53,7 +55,7 @@
 		5B79676B24D29BEA007581B1 /* CellViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewController.swift; sourceTree = "<group>"; };
 		5B79677024D29C66007581B1 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		5B79677224D29C84007581B1 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
-		5B79677424D29CA1007581B1 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		5B79677424D29CA1007581B1 /* NetworkManager_.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager_.swift; sourceTree = "<group>"; };
 		5B79677724D29CFE007581B1 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDataModel.swift; path = NewsAppMVVMRx/Model/CoreDataModel.swift; sourceTree = SOURCE_ROOT; };
 		5BC05E4C24E46FFE0031DA81 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
 		5BC05E5024E4737F0031DA81 /* APIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConstants.swift; sourceTree = "<group>"; };
@@ -109,8 +111,9 @@
 			isa = PBXGroup;
 			children = (
 				5BC05E5024E4737F0031DA81 /* APIConstants.swift */,
-				5B79677424D29CA1007581B1 /* NetworkManager.swift */,
+				5B79677424D29CA1007581B1 /* NetworkManager_.swift */,
 				5B68A49125C5D3F2001EA6CB /* ApiRouter.swift */,
+				5B68A49625C5DBA5001EA6CB /* NetworkManager.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -335,7 +338,7 @@
 				5B79677324D29C84007581B1 /* DataManager.swift in Sources */,
 				5B46A1DB25B9557100A6DA33 /* Reactive+Extensions.swift in Sources */,
 				5B79676324D29B0C007581B1 /* CoreDataStack.swift in Sources */,
-				5B79677524D29CA1007581B1 /* NetworkManager.swift in Sources */,
+				5B79677524D29CA1007581B1 /* NetworkManager_.swift in Sources */,
 				5B27E7EC25BC308300EE4962 /* CoreDataManager.swift in Sources */,
 				5B79676A24D29BCD007581B1 /* CellViewModel.swift in Sources */,
 				5BC05E5424E475800031DA81 /* APIModel.swift in Sources */,
@@ -349,6 +352,7 @@
 				5B79676624D29B72007581B1 /* MainViewController.swift in Sources */,
 				5B3B48BC24D297ED004A6304 /* NewsAppMVVMRx.xcdatamodeld in Sources */,
 				5B3B48B424D297EC004A6304 /* SceneDelegate.swift in Sources */,
+				5B68A49725C5DBA5001EA6CB /* NetworkManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

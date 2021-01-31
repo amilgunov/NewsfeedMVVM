@@ -50,6 +50,7 @@ class DataManager: DataManagerType {
         networkManager.load(page: page)
             .observeOn(scheduler)
             .catchError({ error -> Observable<[News]> in
+                print("SOMETHING IS WRONG!!! \(error.localizedDescription)")
                 self.errorsObservable.onNext(error)
                 self.coreDataManager.syncData(dataNews: [News](), erase: false)
                 return Observable.empty()
