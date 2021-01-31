@@ -7,39 +7,32 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 let imageCache = NSCache<NSString, UIImage>()
 
 extension UIImageView {
     
-    func loadImage(from URLString: String, defaultImage: UIImage?) {
+    func loadImage(from URLString: String, defaultImage: UIImage?) -> Observable<UIImage> {
         
-        self.image = nil
         if let cachedImage = imageCache.object(forKey: NSString(string: URLString)) {
-            self.image = cachedImage
-            return
+            return Observable<UIImage>.just(cachedImage)
         }
         
-        NetworkManager().getImageData(from: URLString) { [weak self] result in
-            
-            switch result {
-            case .failure:
-                DispatchQueue.main.async {
-                    self?.image = defaultImage
-                }
-                return
-            case .success(let imageData):
-                if let imageData = imageData as? Data, let downloadedImage = UIImage(data: imageData) {
+        return NetworkManager().getImageData(from: URLString)
+            .delay(.seconds(3), scheduler: MainScheduler.instance)
+            .catchError({ error -> Observable<Data> in
+                throw RxCocoaURLError.deserializationError(error: error)
+            })
+            .map { imageData in
+                if let downloadedImage = UIImage(data: imageData) {
                     imageCache.setObject(downloadedImage, forKey: NSString(string: URLString))
-                    DispatchQueue.main.async {
-                        self?.image = downloadedImage
-                    }
+                    return downloadedImage
                 } else {
-                    DispatchQueue.main.async {
-                        self?.image = defaultImage
-                    }
+                    return defaultImage!
                 }
             }
-        }
+
     }
 }

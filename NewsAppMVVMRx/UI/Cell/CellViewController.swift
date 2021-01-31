@@ -22,9 +22,10 @@ class CellViewController: UITableViewCell {
         }
     }
     
-    var newsImageView: UIImageView
-    var newsTitleLabel: UILabel
-    var newsAuthorLabel: UILabel
+    private var newsImageView: UIImageView
+    private var newsTitleLabel: UILabel
+    private var newsAuthorLabel: UILabel
+    private var activityIndicator: UIActivityIndicatorView
     
     func bindingViewModel() {
     
@@ -35,10 +36,32 @@ class CellViewController: UITableViewCell {
         viewModel?.author
             .drive(newsAuthorLabel.rx.text)
             .disposed(by: disposeBag)
+        
+        viewModel?.urlToImage
+            .map { _ in false }
+            .bind(to: activityIndicator.rx.isHidden)
+            .disposed(by: disposeBag)
     
         viewModel?.urlToImage
+            
             .subscribe(onNext: { [unowned self] url in
-                self.newsImageView.loadImage(from: url, defaultImage: UIImage(named: "defaultImage"))
+                let loading = self.newsImageView
+                    .loadImage(from: url, defaultImage: UIImage(named: "defaultImage"))
+                    .catchError({ (error) -> Observable<UIImage> in
+                        print(error.localizedDescription)
+                        return Observable.just(UIImage(named: "defaultImage")!)
+                    })
+                    .share()
+                    
+                    loading
+                        .map { _ in true }
+                        .bind(to: activityIndicator.rx.isHidden)
+                        .disposed(by: disposeBag)
+                
+                    loading
+                        .bind(to: newsImageView.rx.image)
+                        .disposed(by: disposeBag)
+                
             })
             .disposed(by: disposeBag)
     }
@@ -70,6 +93,7 @@ class CellViewController: UITableViewCell {
         addSubview(newsImageView)
         addSubview(newsTitleLabel)
         addSubview(newsAuthorLabel)
+        addSubview(activityIndicator)
         
         newsImageView.snp.makeConstraints { (make) in
             make.top.left.right.equalToSuperview().inset(10)
@@ -86,18 +110,24 @@ class CellViewController: UITableViewCell {
             make.bottom.equalToSuperview().inset(20)
             make.left.right.equalToSuperview()
         }
+        
+        activityIndicator.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        activityIndicator.startAnimating()
         newsImageView.image = nil
-        //disposeBag = DisposeBag()
+        disposeBag = DisposeBag()
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         self.newsImageView = UIImageView()
         self.newsTitleLabel = UILabel()
         self.newsAuthorLabel = UILabel()
+        self.activityIndicator = UIActivityIndicatorView()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupIU()
     }
