@@ -25,3 +25,9 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
             .data()
     }
 }
+
+enum ApiError: Error {
+    case urlConfigurationError
+    case httpRequestFailed
+    case deserializationError
+}

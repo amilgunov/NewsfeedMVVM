@@ -25,7 +25,6 @@
 		5B79676824D29B95007581B1 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676724D29B95007581B1 /* MainViewModel.swift */; };
 		5B79676A24D29BCD007581B1 /* CellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676924D29BCD007581B1 /* CellViewModel.swift */; };
 		5B79676C24D29BEA007581B1 /* CellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79676B24D29BEA007581B1 /* CellViewController.swift */; };
-		5B79677124D29C66007581B1 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79677024D29C66007581B1 /* UIImageView+Extension.swift */; };
 		5B79677324D29C84007581B1 /* MainDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79677224D29C84007581B1 /* MainDataManager.swift */; };
 		5BB74AE724F4396000E29C50 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B79677724D29CFE007581B1 /* CoreDataModel.swift */; };
 		5BC05E4D24E46FFE0031DA81 /* Builder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC05E4C24E46FFE0031DA81 /* Builder.swift */; };
@@ -57,7 +56,6 @@
 		5B79676724D29B95007581B1 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		5B79676924D29BCD007581B1 /* CellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewModel.swift; sourceTree = "<group>"; };
 		5B79676B24D29BEA007581B1 /* CellViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewController.swift; sourceTree = "<group>"; };
-		5B79677024D29C66007581B1 /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		5B79677224D29C84007581B1 /* MainDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDataManager.swift; sourceTree = "<group>"; };
 		5B79677724D29CFE007581B1 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDataModel.swift; path = NewsAppMVVMRx/Model/CoreDataModel.swift; sourceTree = SOURCE_ROOT; };
 		5BC05E4C24E46FFE0031DA81 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
@@ -99,6 +97,14 @@
 				5B2F75B025C7E607003B8CE3 /* Router.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		5B2F75C525C84B08003B8CE3 /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				5B3B48BF24D297F7004A6304 /* LaunchScreen.storyboard */,
+			);
+			path = LaunchScreen;
 			sourceTree = "<group>";
 		};
 		5B3B48A524D297EC004A6304 = {
@@ -147,7 +153,7 @@
 		5B79676424D29B55007581B1 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				5B3B48BF24D297F7004A6304 /* LaunchScreen.storyboard */,
+				5B2F75C525C84B08003B8CE3 /* LaunchScreen */,
 				5BC05E5624E476E70031DA81 /* Main */,
 				5BC05E5724E476FF0031DA81 /* Cell */,
 			);
@@ -175,7 +181,6 @@
 		5BC05E4F24E472510031DA81 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				5B79677024D29C66007581B1 /* UIImageView+Extension.swift */,
 				5B2F75BD25C7F0B5003B8CE3 /* UIViewController+Extensions.swift */,
 				5B46A1DA25B9557100A6DA33 /* Reactive+Extensions.swift */,
 				5B46A1DF25B9E40F00A6DA33 /* Array+Extensions.swift */,
@@ -371,7 +376,6 @@
 				5B46A1E025B9E40F00A6DA33 /* Array+Extensions.swift in Sources */,
 				5B79676C24D29BEA007581B1 /* CellViewController.swift in Sources */,
 				5B2F75BE25C7F0B5003B8CE3 /* UIViewController+Extensions.swift in Sources */,
-				5B79677124D29C66007581B1 /* UIImageView+Extension.swift in Sources */,
 				5B2F75AA25C7D56F003B8CE3 /* NewsEndPoint.swift in Sources */,
 				5BC05E4D24E46FFE0031DA81 /* Builder.swift in Sources */,
 				5B2F75B125C7E607003B8CE3 /* Router.swift in Sources */,

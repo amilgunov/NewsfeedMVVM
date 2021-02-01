@@ -94,7 +94,7 @@ class CellViewController: UITableViewCell {
         }
         
         activityIndicator.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
+            make.center.equalTo(newsImageView)
         }
     }
     
