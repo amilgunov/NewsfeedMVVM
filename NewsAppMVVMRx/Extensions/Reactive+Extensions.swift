@@ -10,6 +10,7 @@ import RxSwift
 import RxCocoa
 
 extension Reactive where Base: UIViewController {
+    
     var viewWillAppear: ControlEvent<Void> {
         let source = self.methodInvoked(#selector(Base.viewWillAppear(_:))).map { _ in }
         return ControlEvent(events: source)
@@ -17,7 +18,9 @@ extension Reactive where Base: UIViewController {
 }
 
 extension Reactive where Base: UIScrollView {
+    
     var reachedBottom: ControlEvent<Void> {
+        
         let observable = contentOffset
             .flatMap { [weak base] contentOffset -> Observable<Void> in
                 guard let scrollView = base else { return Observable.empty() }

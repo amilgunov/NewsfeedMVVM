@@ -9,6 +9,7 @@
 import Foundation
 
 extension Array where Element: Hashable {
+    
     func unique() -> Array<Element> {
         return Array(Set(self))
     }

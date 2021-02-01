@@ -17,7 +17,7 @@ protocol DataManagerType {
     var errorsObservable: PublishSubject<Error> { get }
 }
 
-class DataManager: DataManagerType {
+class MainDataManager: DataManagerType {
     
     private let networkManager: NetworkManagerType
     private let coreDataManager: CoreDataManager

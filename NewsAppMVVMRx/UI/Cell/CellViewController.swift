@@ -37,32 +37,14 @@ class CellViewController: UITableViewCell {
             .drive(newsAuthorLabel.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel?.urlToImage
-            .map { _ in false }
-            .bind(to: activityIndicator.rx.isHidden)
+        viewModel?.image
+            .map { _ in true }
+            .asDriver()
+            .drive(activityIndicator.rx.isHidden)
             .disposed(by: disposeBag)
-    
-        viewModel?.urlToImage
-            
-            .subscribe(onNext: { [unowned self] url in
-                let loading = self.newsImageView
-                    .loadImage(from: url, defaultImage: UIImage(named: "defaultImage"))
-                    .catchError({ (error) -> Observable<UIImage> in
-                        print(error.localizedDescription)
-                        return Observable.just(UIImage(named: "defaultImage")!)
-                    })
-                    .share()
-                    
-                    loading
-                        .map { _ in true }
-                        .bind(to: activityIndicator.rx.isHidden)
-                        .disposed(by: disposeBag)
-                
-                    loading
-                        .bind(to: newsImageView.rx.image)
-                        .disposed(by: disposeBag)
-                
-            })
+        
+        viewModel?.image
+            .drive(newsImageView.rx.image)
             .disposed(by: disposeBag)
     }
     

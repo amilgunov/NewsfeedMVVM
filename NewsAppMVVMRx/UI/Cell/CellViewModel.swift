@@ -11,22 +11,45 @@ import RxSwift
 import RxCocoa
 import RxDataSources
 
+let imageCache = NSCache<NSString, UIImage>()
+
 protocol CellViewModelType {
     
     var identity: String { get }
     var publishedAt: Date { get }
-    var title:      Driver<String> { get }
-    var author:     Driver<String> { get }
-    var urlToImage: Observable<String> { get }
+    var title:      Driver<String?> { get }
+    var author:     Driver<String?> { get }
+    var image:      Driver<UIImage?> { get }
 }
 
 final class CellViewModel: CellViewModelType, IdentifiableType {
     
+    private let networkManager = NetworkManager()
+    
     let identity: String
     let publishedAt: Date
-    let title:      Driver<String>
-    let author:     Driver<String>
-    let urlToImage: Observable<String>
+    let title:      Driver<String?>
+    let author:     Driver<String?>
+    private let urlToImage: String
+    private let defaultImage: UIImage?
+    
+    var image: Driver<UIImage?> {
+        
+        if let cachedImage = imageCache.object(forKey: NSString(string: urlToImage)) {
+            return Driver<UIImage?>.just(cachedImage)
+        }
+        
+        return networkManager.getNewsImage(from: urlToImage)
+            .delay(.seconds(1), scheduler: MainScheduler.instance)
+            .map { imageData in
+                if let downloadedImage = UIImage(data: imageData) {
+                    imageCache.setObject(downloadedImage, forKey: NSString(string: self.urlToImage))
+                    return downloadedImage
+                } else {
+                    return self.defaultImage
+                }
+            }.asDriver(onErrorJustReturn: defaultImage)
+    }
     
     init(for news: NewsEntity) {
         
@@ -34,9 +57,10 @@ final class CellViewModel: CellViewModelType, IdentifiableType {
         
         identity = (news.title ?? "") + news.description.prefix(10) + date
         publishedAt = news.publishedAt ?? Date()
-        title = Observable.of(news.title ?? "").asDriver(onErrorJustReturn: "")
-        author = Observable.of((news.author ?? "") + " at " + date).asDriver(onErrorJustReturn: "")
-        urlToImage = Observable.of(news.urlToImage ?? "")
+        title = Observable.of(news.title).asDriver(onErrorJustReturn: nil)
+        author = Observable.of((news.author ?? "Noname") + " at " + date).asDriver(onErrorJustReturn: "")
+        urlToImage = news.urlToImage ?? ""
+        defaultImage = UIImage(named: "defaultImage")
     }
 }
 
