@@ -19,7 +19,13 @@ class MainViewController: UIViewController, UITableViewDelegate {
     private var viewModel: MainViewModel?
     private var tableView: UITableView
     private var refreshControl: UIRefreshControl
-    private var activityIndicator: UIActivityIndicatorView
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.startAnimating()
+        indicator.isHidden = true
+        return indicator
+    }()
     
     private let disposeBag = DisposeBag()
     
@@ -87,8 +93,7 @@ class MainViewController: UIViewController, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        activityIndicator.startAnimating()
-        activityIndicator.isHidden = true
+        
         return activityIndicator
     }
     
@@ -115,10 +120,10 @@ class MainViewController: UIViewController, UITableViewDelegate {
     }
 
     init(viewModel: MainViewModel) {
+        
         self.viewModel = viewModel
         self.tableView = UITableView()
         self.refreshControl = UIRefreshControl()
-        self.activityIndicator = UIActivityIndicatorView()
         
         super.init(nibName: nil, bundle: nil)
     }
