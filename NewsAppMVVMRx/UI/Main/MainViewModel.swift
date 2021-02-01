@@ -36,6 +36,7 @@ final class MainViewModel: MainViewModelType {
         let isLoading: Driver<Bool>
         let title: Driver<String>
         let cells: Driver<[CellViewModel]>
+        let alert: Driver<String>
     }
     
     func transform(input: Input) -> Output {
@@ -104,13 +105,11 @@ final class MainViewModel: MainViewModelType {
             })
             .disposed(by: disposeBag)
         
-        dataManager.errorsObservable
-            .subscribe(onNext: { error in
-                print("----------Error, catched in ViewModel: \(error.localizedDescription)")
-            })
-            .disposed(by: disposeBag)
+        let errors = dataManager.errorsObservable
+            .map { $0.localizedDescription }
+            .asDriver(onErrorJustReturn: "")
         
-        return Output(isLoading: isLoading.asDriver(onErrorJustReturn: false), title: titleDriver, cells: cellsDriver)
+        return Output(isLoading: isLoading.asDriver(onErrorJustReturn: false), title: titleDriver, cells: cellsDriver, alert: errors)
     }
     
     init(with manager: DataManagerType) {
