@@ -47,11 +47,12 @@ class DataManager: DataManagerType {
 
     public func fetchNewData(page: Int) {
         let scheduler = ConcurrentDispatchQueueScheduler(qos: .default)
-        networkManager.load(page: page)
+        networkManager.getNews(page: page)
             .observeOn(scheduler)
             .catchError({ error -> Observable<[News]> in
-                print("SOMETHING IS WRONG!!! \(error.localizedDescription)")
-                self.errorsObservable.onNext(error)
+                if error.localizedDescription != "Response status code was unacceptable: 426." {
+                    self.errorsObservable.onNext(error)
+                }
                 self.coreDataManager.syncData(dataNews: [News](), erase: false)
                 return Observable.empty()
             })

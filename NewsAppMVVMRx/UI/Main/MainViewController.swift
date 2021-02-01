@@ -78,6 +78,12 @@ class MainViewController: UIViewController, UITableViewDelegate {
                 self.items = cellsCount
             })
             .disposed(by: disposeBag)
+        
+        output.alert.asObservable()
+            .subscribe(onNext: {
+                self.showAlert(alertText: "Data error", alertMessage: $0)
+            })
+            .disposed(by: disposeBag)
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

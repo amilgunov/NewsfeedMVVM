@@ -8,18 +8,20 @@
 import Foundation
 import RxSwift
 import RxAlamofire
+import Alamofire
 
 protocol NetworkManagerType: class {
-    func load(page: Int) -> Observable<[News]>
-    func getImageData(from: String) -> Observable<Data>
+    func getNews(page: Int) -> Observable<[News]>
+    func getNewsImage(from: String) -> Observable<Data>
 }
 
 class NetworkManager: NetworkManagerType {
-
-    func load(page: Int) -> Observable<[News]> {
-        return RxAlamofire.request(.get, APIConstants().url(with: page)!)
-            .validate(statusCode: 200 ..< 300)
-            .data()
+    
+    static let environment : NetworkEnvironment = .production
+    private let newsRouter = Router<NewsEndPoint>()
+    
+    func getNews(page: Int) -> Observable<[News]> {
+        newsRouter.request(.news(page: page))
             .map { data -> [News] in
                 do {
                     let json = try JSONDecoder().decode(NewsFeed.self, from: data)
@@ -30,15 +32,13 @@ class NetworkManager: NetworkManagerType {
             }
     }
     
-    func getImageData(from url: String) -> Observable<Data> {
-        return RxAlamofire.request(.get, url)
-            .validate(statusCode: 200 ..< 300)
-            .data()
+    func getNewsImage(from url: String) -> Observable<Data> {
+        return newsRouter.request(.photo(imageUrl: url))
     }
-
 }
 
 enum ApiError: Error {
+    case urlConfigurationError
     case deserializationError
     case forbidden              //Status code 403
     case notFound               //Status code 404

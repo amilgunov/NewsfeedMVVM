@@ -20,10 +20,11 @@ extension UIImageView {
             return Observable<UIImage>.just(cachedImage)
         }
         
-        return NetworkManager().getImageData(from: URLString)
-            .delay(.seconds(3), scheduler: MainScheduler.instance)
+        return NetworkManager().getNewsImage(from: URLString)
+            .delay(.seconds(1), scheduler: MainScheduler.instance)
             .catchError({ error -> Observable<Data> in
-                throw RxCocoaURLError.deserializationError(error: error)
+                //throw RxCocoaURLError.deserializationError(error: error)
+                throw error
             })
             .map { imageData in
                 if let downloadedImage = UIImage(data: imageData) {
