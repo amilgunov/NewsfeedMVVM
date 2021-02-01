@@ -6,5 +6,5 @@ The Newsfeed app with following stack:
   - RxSwift
   - RxCocoa
   - RxDataSources
-  - Alamofire
+  - RxAlamofire
   - SnapKit
