@@ -32,12 +32,16 @@ extension NewsEndPoint: EndPointType {
         return [
             URLQueryItem(name: "country", value: "us"),
             URLQueryItem(name: "category", value: "business"),
-            URLQueryItem(name: "apiKey", value: "27951c65db6a4dd0bb7d3d7e7f1c1fdd")
+            //URLQueryItem(name: "apiKey", value: "27951c65db6a4dd0bb7d3d7e7f1c1fdd")
         ]
     }
     
     var httpMethod: HTTPMethod {
         return .get
+    }
+    
+    var headers: HTTPHeaders? {
+        return [HTTPHeader(name: "X-Api-Key", value: "27951c65db6a4dd0bb7d3d7e7f1c1fdd")]
     }
     
     var url: URL? {

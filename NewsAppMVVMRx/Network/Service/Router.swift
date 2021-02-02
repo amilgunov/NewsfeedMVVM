@@ -21,7 +21,7 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
  
     func request(_ route: EndPoint) -> Observable<Data> {
         guard let url = route.url else { return Observable.error(ApiError.urlConfigurationError) }
-        return RxAlamofire.request(route.httpMethod, url)
+        return RxAlamofire.request(route.httpMethod, url, headers: route.headers)
             .validate(statusCode: 200 ..< 300)
             .data()
     }
