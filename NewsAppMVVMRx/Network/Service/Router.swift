@@ -12,6 +12,7 @@ import Alamofire
 import RxAlamofire
 
 protocol NetworkRouter: class {
+    
     associatedtype EndPoint: EndPointType
     func request(_ route: EndPoint) -> Observable<Data>
 }
@@ -27,6 +28,7 @@ class Router<EndPoint: EndPointType>: NetworkRouter {
 }
 
 enum ApiError: Error {
+    
     case urlConfigurationError
     case httpRequestFailed
     case deserializationError

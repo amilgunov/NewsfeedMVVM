@@ -21,7 +21,7 @@ final class MainViewModel: MainViewModelType {
     
     private var dataManager: DataManagerType
     private let isLoading = PublishSubject<Bool>()
-    private let pageTrigger = BehaviorRelay<Int>(value: 1)
+    private let pageTrigger = BehaviorRelay<Int>(value: 0)
     
     private let disposeBag = DisposeBag()
     
@@ -37,6 +37,10 @@ final class MainViewModel: MainViewModelType {
         let title: Driver<String>
         let cells: Driver<[CellViewModel]>
         let alert: Driver<String>
+    }
+    
+    func startUp() {
+        dataManager.fetchNewDataTrigger.onNext(0)
     }
     
     func transform(input: Input) -> Output {
@@ -55,7 +59,7 @@ final class MainViewModel: MainViewModelType {
             .disposed(by: disposeBag)
 
         /// pageTrigger -> page #+1 when triggered BOTTOM
-        input.reachedBottomTrigger.asObservable().share()
+        input.reachedBottomTrigger.asObservable()
             .observeOn(scheduler)
             .withLatestFrom(isLoading)
             .filter { !$0 }
@@ -75,17 +79,13 @@ final class MainViewModel: MainViewModelType {
             .bind(to: dataManager.fetchNewDataTrigger)
             .disposed(by: disposeBag)
         
-        pageTrigger
-            .subscribe(onNext: { print("Current page is \($0)")})
-            .disposed(by: disposeBag)
-        
-        
         // MARK: - Receive data from data manager
         
-        let dataObservable = dataManager.dataObservable.delay(.seconds(2), scheduler: scheduler).share()
+        let dataObservable = dataManager.dataObservable
+            .share()
         
         let titleDriver = isLoading
-            .map { $0 ? "Loading..." : "Newsfeed" }
+            .map { $0 ? "Updating..." : "Newsfeed" }
             .asDriver(onErrorJustReturn: "Something goes wrong...")
         
         let cellsDriver = dataObservable
@@ -97,12 +97,6 @@ final class MainViewModel: MainViewModelType {
             .catchErrorJustReturn([])
             .map { _ in false }
             .bind(to: isLoading)
-            .disposed(by: disposeBag)
-        
-        dataObservable
-            .subscribe(onNext: { cells in
-                print("New cells count: \(cells.count)")
-            })
             .disposed(by: disposeBag)
         
         let errors = dataManager.errorsObservable

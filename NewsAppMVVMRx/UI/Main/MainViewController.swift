@@ -32,7 +32,6 @@ class MainViewController: UIViewController, UITableViewDelegate {
     private var items: Int = 0
     
     private let dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
-        
             let cell = tableView.dequeueReusableCell(withIdentifier: CellViewController.cellIdentifier)
             (cell as? CellViewController)?.viewModel = cellViewModel
             return cell ?? UITableViewCell()
@@ -40,7 +39,6 @@ class MainViewController: UIViewController, UITableViewDelegate {
     )
     
     private func bindViewModel() {
-        
         guard let viewModel = viewModel else { return }
         
         //MARK: - ViewModel Inputs
@@ -69,6 +67,7 @@ class MainViewController: UIViewController, UITableViewDelegate {
             .disposed(by: disposeBag)
         
         output.cells.asObservable()
+            .debug("Main View Controller")
             .map { cellViewModels -> [Section] in
                 [Section(model: "1", items: cellViewModels)]
             }
@@ -93,23 +92,20 @@ class MainViewController: UIViewController, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        
         return activityIndicator
     }
     
     private func setupUI() {
-
-        tableView.refreshControl = refreshControl
-        tableView.delegate = self
-        tableView.allowsSelection = false
-        tableView.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
-
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { (make) in
             make.size.equalToSuperview()
         }
         
+        tableView.refreshControl = refreshControl
+        tableView.delegate = self
+        tableView.allowsSelection = false
+        tableView.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
     }
     
     override func viewDidLoad() {
@@ -117,13 +113,13 @@ class MainViewController: UIViewController, UITableViewDelegate {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         setupUI()
         bindViewModel()
+        viewModel?.startUp()
     }
 
     init(viewModel: MainViewModel) {
-        
-        self.viewModel = viewModel
-        self.tableView = UITableView()
         self.refreshControl = UIRefreshControl()
+        self.tableView = UITableView()
+        self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)
     }

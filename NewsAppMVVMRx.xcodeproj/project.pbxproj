@@ -57,7 +57,7 @@
 		5B79676924D29BCD007581B1 /* CellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewModel.swift; sourceTree = "<group>"; };
 		5B79676B24D29BEA007581B1 /* CellViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewController.swift; sourceTree = "<group>"; };
 		5B79677224D29C84007581B1 /* MainDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDataManager.swift; sourceTree = "<group>"; };
-		5B79677724D29CFE007581B1 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDataModel.swift; path = NewsAppMVVMRx/Model/CoreDataModel.swift; sourceTree = SOURCE_ROOT; };
+		5B79677724D29CFE007581B1 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDataModel.swift; path = NewsAppMVVMRx/DataManagers/CoreData/CoreDataModel.swift; sourceTree = SOURCE_ROOT; };
 		5BC05E4C24E46FFE0031DA81 /* Builder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Builder.swift; sourceTree = "<group>"; };
 		5BC05E5324E475800031DA81 /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -78,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				5B2F75A925C7D56F003B8CE3 /* NewsEndPoint.swift */,
+				5BC05E5324E475800031DA81 /* APIModel.swift */,
 			);
 			path = EndPoint;
 			sourceTree = "<group>";
@@ -130,7 +131,6 @@
 			children = (
 				5BC05E4E24E471FD0031DA81 /* App */,
 				5B68A49025C5D2DB001EA6CB /* Network */,
-				5B79676D24D29BF5007581B1 /* Model */,
 				5BC05E5824E477790031DA81 /* Helper */,
 				5BC05E5224E474F50031DA81 /* DataManagers */,
 				5B79676424D29B55007581B1 /* UI */,
@@ -160,15 +160,6 @@
 			path = UI;
 			sourceTree = "<group>";
 		};
-		5B79676D24D29BF5007581B1 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				5B79677724D29CFE007581B1 /* CoreDataModel.swift */,
-				5BC05E5324E475800031DA81 /* APIModel.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		5BC05E4E24E471FD0031DA81 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,8 +182,7 @@
 		5BC05E5224E474F50031DA81 /* DataManagers */ = {
 			isa = PBXGroup;
 			children = (
-				5B79676224D29B0C007581B1 /* CoreDataStack.swift */,
-				5B27E7EB25BC308300EE4962 /* CoreDataManager.swift */,
+				5BC3C8E325C99C3800640473 /* CoreData */,
 				5B79677224D29C84007581B1 /* MainDataManager.swift */,
 			);
 			path = DataManagers;
@@ -232,6 +222,16 @@
 				5BC05E4C24E46FFE0031DA81 /* Builder.swift */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		5BC3C8E325C99C3800640473 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				5B79677724D29CFE007581B1 /* CoreDataModel.swift */,
+				5B79676224D29B0C007581B1 /* CoreDataStack.swift */,
+				5B27E7EB25BC308300EE4962 /* CoreDataManager.swift */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		A9BA9CB2C6E252ADB6A44B8D /* Frameworks */ = {
