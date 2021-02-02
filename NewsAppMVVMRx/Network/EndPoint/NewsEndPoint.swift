@@ -9,12 +9,6 @@
 import Foundation
 import Alamofire
 
-enum NetworkEnvironment {
-    case qa
-    case production
-    case staging
-}
-
 public enum NewsEndPoint {
     case news(page: Int)
     case photo(imageUrl: String)
@@ -27,11 +21,7 @@ extension NewsEndPoint: EndPointType {
     }
     
     private var host: String {
-        switch NetworkManager.environment {
-        case .qa: return "qa.newsapi.org"
-        case .production: return "newsapi.org"
-        case .staging: return "dev.newsapi.org"
-        }
+        return "newsapi.org"
     }
     
     private var path: String {

@@ -17,7 +17,6 @@ protocol NetworkManagerType: class {
 
 class NetworkManager: NetworkManagerType {
     
-    static let environment : NetworkEnvironment = .production
     private let newsRouter = Router<NewsEndPoint>()
     
     func getNews(page: Int) -> Observable<[News]> {
@@ -35,13 +34,4 @@ class NetworkManager: NetworkManagerType {
     func getNewsImage(from url: String) -> Observable<Data> {
         return newsRouter.request(.photo(imageUrl: url))
     }
-}
-
-enum ApiError: Error {
-    case urlConfigurationError
-    case deserializationError
-    case forbidden              //Status code 403
-    case notFound               //Status code 404
-    case conflict               //Status code 409
-    case internalServerError    //Status code 500
 }

@@ -6,8 +6,6 @@
 //  Copyright © 2020 Alexander Milgunov. All rights reserved.
 //
 
-import Foundation
-import CoreData
 import RxSwift
 
 protocol DataManagerType {
@@ -22,14 +20,17 @@ class MainDataManager: DataManagerType {
     private let networkManager: NetworkManagerType
     private let coreDataManager: CoreDataManager
     
+    // MARK: - Input
     private(set) var fetchNewDataTrigger = PublishSubject<Int>()
+    
+    // MARK: - Output
     private(set) var dataObservable = PublishSubject<[NewsEntity]>()
     private(set) var errorsObservable = PublishSubject<Error>()
     
     private let disposeBag = DisposeBag()
     
     private func bindTrigger() {
-        
+
         fetchNewDataTrigger
             .subscribe(onNext: { page in
                 self.fetchNewData(page: page)
