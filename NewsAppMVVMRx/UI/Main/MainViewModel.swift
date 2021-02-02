@@ -22,6 +22,7 @@ final class MainViewModel: MainViewModelType {
     private var dataManager: DataManagerType
     private let isLoading = PublishSubject<Bool>()
     private let pageTrigger = BehaviorRelay<Int>(value: 0)
+    private let cachedData = BehaviorRelay<Bool>(value: true)
     
     private let disposeBag = DisposeBag()
     
@@ -70,23 +71,20 @@ final class MainViewModel: MainViewModelType {
         
         /// Start isLoading
         pageTrigger
+            .skip(1)
             .map { _ in true }
             .bind(to: isLoading)
             .disposed(by: disposeBag)
         
         /// Request to data manager
         pageTrigger
+            .skip(1)
             .bind(to: dataManager.fetchNewDataTrigger)
             .disposed(by: disposeBag)
         
         // MARK: - Receive data from data manager
         
-        let dataObservable = dataManager.dataObservable
-            .share()
-        
-        let titleDriver = isLoading
-            .map { $0 ? "Updating..." : "Newsfeed" }
-            .asDriver(onErrorJustReturn: "Something goes wrong...")
+        let dataObservable = dataManager.dataObservable.share()
         
         let cellsDriver = dataObservable
             .map { $0.map { CellViewModel(for: $0) }.unique() }
@@ -99,6 +97,18 @@ final class MainViewModel: MainViewModelType {
             .bind(to: isLoading)
             .disposed(by: disposeBag)
         
+        dataObservable
+            .skip(1)
+            .map { _ in false }
+            .bind(to: cachedData)
+            .disposed(by: disposeBag)
+        
+        let titleDriver = Observable
+            .combineLatest(isLoading, cachedData)
+            .debug("title driver")
+            .map { $0.0 ? "Updating..." : ( $0.1 ? "Newsfeed (cache)" : "Newsfeed") }
+            .asDriver(onErrorJustReturn: "Something goes wrong...")
+        
         let errors = dataManager.errorsObservable
             .map { $0.localizedDescription }
             .asDriver(onErrorJustReturn: "")
@@ -110,6 +120,3 @@ final class MainViewModel: MainViewModelType {
         dataManager = manager
     }
 }
-
-
-

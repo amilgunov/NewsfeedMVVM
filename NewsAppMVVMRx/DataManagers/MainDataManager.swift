@@ -38,6 +38,7 @@ class MainDataManager: DataManagerType {
             .disposed(by: disposeBag)
         
         coreDataManager.coreDataObservable
+            .debug("data manager")
             .bind(to: dataObservable)
             .disposed(by: disposeBag)
         

@@ -12,7 +12,7 @@ import RxCocoa
 extension Reactive where Base: UIViewController {
     
     var viewWillAppear: ControlEvent<Void> {
-        let source = self.methodInvoked(#selector(Base.viewWillAppear(_:))).delay(.seconds(2), scheduler: ConcurrentDispatchQueueScheduler(qos: .default)).map { _ in }
+        let source = self.methodInvoked(#selector(Base.viewWillAppear(_:))).delay(.seconds(8), scheduler: ConcurrentDispatchQueueScheduler(qos: .default)).map { _ in }
         return ControlEvent(events: source)
     }
 }

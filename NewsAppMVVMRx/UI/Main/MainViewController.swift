@@ -67,7 +67,6 @@ class MainViewController: UIViewController, UITableViewDelegate {
             .disposed(by: disposeBag)
         
         output.cells.asObservable()
-            .debug("Main View Controller")
             .map { cellViewModels -> [Section] in
                 [Section(model: "1", items: cellViewModels)]
             }
