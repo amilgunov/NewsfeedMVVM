@@ -141,7 +141,7 @@
 		5B3B48B024D297EC004A6304 /* NewsfeedMVVM */ = {
 			isa = PBXGroup;
 			children = (
-				5BC05E4E24E471FD0031DA81 /* App */,
+				5BC05E4E24E471FD0031DA81 /* Application */,
 				5B68A49025C5D2DB001EA6CB /* Network */,
 				5BC05E5824E477790031DA81 /* Coordinator */,
 				5BC05E5224E474F50031DA81 /* DataManagers */,
@@ -182,7 +182,7 @@
 			path = DetailScreen;
 			sourceTree = "<group>";
 		};
-		5BC05E4E24E471FD0031DA81 /* App */ = {
+		5BC05E4E24E471FD0031DA81 /* Application */ = {
 			isa = PBXGroup;
 			children = (
 				5B3B48B124D297EC004A6304 /* AppDelegate.swift */,
@@ -190,7 +190,7 @@
 				5BBDB5A325CA721800921CD2 /* AppCoordinator.swift */,
 				5B3B48B324D297EC004A6304 /* SceneDelegate.swift */,
 			);
-			path = App;
+			path = Application;
 			sourceTree = "<group>";
 		};
 		5BC05E4F24E472510031DA81 /* Extensions */ = {
