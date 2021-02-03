@@ -1,6 +1,6 @@
 //
 //  JSONModel.swift
-//  NewsAppMVVMRx
+//  NewsfeedMVVM
 //
 //  Created by Alexander Milgunov on 13.08.2020.
 //  Copyright © 2020 Alexander Milgunov. All rights reserved.

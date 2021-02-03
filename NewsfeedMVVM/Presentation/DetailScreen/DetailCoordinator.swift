@@ -1,6 +1,6 @@
 //
 //  DetailCoordinator.swift
-//  NewsAppMVVMRx
+//  NewsfeedMVVM
 //
 //  Created by Alexander Milgunov on 03.02.2021.
 //  Copyright © 2021 Alexander Milgunov. All rights reserved.
@@ -14,7 +14,6 @@ class DetailCoordinator: CoordinatorType {
     let viewModel: CellViewModelType
     
     func start() {
-        
         let detailViewController = DetailViewController()
         detailViewController.viewModel = viewModel
         navigationController?.present(detailViewController, animated: true)
