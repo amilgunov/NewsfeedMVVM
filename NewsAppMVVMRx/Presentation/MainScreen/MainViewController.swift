@@ -31,8 +31,8 @@ class MainViewController: UIViewController, UITableViewDelegate {
         tableView.rx.itemSelected
             .asObservable()
             .subscribe(onNext: { indexPath in
-                guard let cell = tableView.dataSource?.tableView(tableView, cellForRowAt: indexPath) as? CellViewController else { return }
-                self.coordinator?.coordinateToDetail(cellViewModel: cell.viewModel)
+                guard let cell = tableView.dataSource?.tableView(tableView, cellForRowAt: indexPath) as? CellViewController, let viewModel = cell.viewModel else { return }
+                self.coordinator?.coordinateToDetail(viewModel: viewModel)
             })
             .disposed(by: disposeBag)
         
@@ -123,7 +123,6 @@ class MainViewController: UIViewController, UITableViewDelegate {
         tableView.snp.makeConstraints { (make) in
             make.size.equalToSuperview()
         }
-        
     }
     
     override func viewDidLoad() {
@@ -135,9 +134,7 @@ class MainViewController: UIViewController, UITableViewDelegate {
     }
 
     init(viewModel: MainViewModel) {
-        
         self.viewModel = viewModel
-        
         super.init(nibName: nil, bundle: nil)
     }
     

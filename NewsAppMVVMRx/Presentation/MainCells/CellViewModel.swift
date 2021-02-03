@@ -16,9 +16,10 @@ protocol CellViewModelType {
     
     var identity: String { get }
     var publishedAt: Date { get }
-    var title:      Driver<String?> { get }
-    var author:     Driver<String?> { get }
-    var image:      Driver<UIImage?> { get }
+    var title: Driver<String?> { get }
+    var author: Driver<String?> { get }
+    var content: Driver<String?> { get }
+    var image: Driver<UIImage?> { get }
 }
 
 final class CellViewModel: CellViewModelType, IdentifiableType {

@@ -13,7 +13,7 @@ class DetailViewController: UIViewController {
     
     private var disposeBag = DisposeBag()
     
-    var viewModel: CellViewModel? {
+    var viewModel: CellViewModelType? {
         didSet {
             bindingViewModel()
         }
@@ -57,6 +57,43 @@ class DetailViewController: UIViewController {
         return activityIndicator
     }()
     
+    func setupIU() {
+        
+        view.backgroundColor = .white
+        
+        view.addSubview(newsImageView)
+        view.addSubview(newsTitleLabel)
+        view.addSubview(newsContentLabel)
+        view.addSubview(newsAuthorLabel)
+        view.addSubview(activityIndicator)
+        
+        newsImageView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().inset(30)
+            make.left.right.equalToSuperview().inset(10)
+            make.height.equalTo(view.frame.height/3)
+        }
+        
+        newsTitleLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(newsImageView.snp.bottom).offset(10)
+            make.left.right.equalToSuperview().inset(10)
+        }
+        
+        newsContentLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(newsTitleLabel.snp.bottom)
+            make.left.right.equalToSuperview().inset(10)
+        }
+        
+        newsAuthorLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(newsContentLabel.snp.bottom).offset(30)
+            make.bottom.equalToSuperview().inset(80)
+            make.left.right.equalToSuperview()
+        }
+        
+        activityIndicator.snp.makeConstraints { (make) in
+            make.center.equalTo(newsImageView)
+        }
+    }
+    
     func bindingViewModel() {
     
         viewModel?.title
@@ -82,46 +119,8 @@ class DetailViewController: UIViewController {
             .disposed(by: disposeBag)
     }
     
-    func setupIU() {
-        
-        view.backgroundColor = .white
-        
-        view.addSubview(newsImageView)
-        view.addSubview(newsTitleLabel)
-        view.addSubview(newsContentLabel)
-        view.addSubview(newsAuthorLabel)
-        view.addSubview(activityIndicator)
-        
-        newsImageView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().inset(30)
-            make.left.right.equalToSuperview().inset(10)
-            make.height.equalTo(view.frame.height/3)
-        }
-        
-        newsTitleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(newsImageView.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(10)
-        }
-        
-        newsContentLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(newsTitleLabel.snp.bottom).offset(10)
-            make.left.right.equalToSuperview().inset(10)
-        }
-        
-        newsAuthorLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(newsContentLabel.snp.bottom).offset(30)
-            make.bottom.equalToSuperview().inset(80)
-            make.left.right.equalToSuperview()
-        }
-        
-        activityIndicator.snp.makeConstraints { (make) in
-            make.center.equalTo(newsImageView)
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupIU()
-        bindingViewModel()
     }
 }

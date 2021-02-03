@@ -49,6 +49,36 @@ class CellViewController: UITableViewCell {
         return activityIndicator
     }()
     
+    func setupIU() {
+            
+        addSubview(newsImageView)
+        addSubview(newsTitleLabel)
+        addSubview(newsAuthorLabel)
+        addSubview(activityIndicator)
+        
+        newsImageView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().inset(15)
+            make.left.right.equalToSuperview().inset(30)
+            make.height.equalTo(180)
+        }
+        
+        newsTitleLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(newsImageView.snp.bottom).offset(30)
+            make.left.right.equalToSuperview().inset(10)
+        }
+        
+        newsAuthorLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(newsTitleLabel.snp.bottom).offset(10)
+            make.bottom.equalToSuperview().inset(20)
+            make.left.right.equalToSuperview()
+        }
+        
+        activityIndicator.snp.makeConstraints { (make) in
+            make.center.equalTo(newsImageView)
+        }
+    }
+    
+    
     func bindingViewModel() {
     
         viewModel?.title
@@ -68,34 +98,6 @@ class CellViewController: UITableViewCell {
         viewModel?.image
             .drive(newsImageView.rx.image)
             .disposed(by: disposeBag)
-    }
-    
-    func setupIU() {
-            
-        addSubview(newsImageView)
-        addSubview(newsTitleLabel)
-        addSubview(newsAuthorLabel)
-        addSubview(activityIndicator)
-        
-        newsImageView.snp.makeConstraints { (make) in
-            make.top.left.right.equalToSuperview().inset(10)
-            make.height.equalTo(180)
-        }
-        
-        newsTitleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(newsImageView.snp.bottom).offset(30)
-            make.left.right.equalToSuperview().inset(10)
-        }
-        
-        newsAuthorLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(newsTitleLabel.snp.bottom).offset(10)
-            make.bottom.equalToSuperview().inset(20)
-            make.left.right.equalToSuperview()
-        }
-        
-        activityIndicator.snp.makeConstraints { (make) in
-            make.center.equalTo(newsImageView)
-        }
     }
     
     override func prepareForReuse() {

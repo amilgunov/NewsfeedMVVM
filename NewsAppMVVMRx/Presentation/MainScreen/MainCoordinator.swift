@@ -9,7 +9,7 @@
 import UIKit
 
 protocol DetailFlow: class {
-    func coordinateToDetail(cellViewModel: CellViewModel?)
+    func coordinateToDetail(viewModel: CellViewModelType)
 }
 
 class MainCoordinator: CoordinatorType, DetailFlow {
@@ -30,12 +30,12 @@ class MainCoordinator: CoordinatorType, DetailFlow {
         navigationController.pushViewController(mainViewController, animated: true)
     }
     
-    func coordinateToDetail(cellViewModel: CellViewModel?) {
-        let detailViewController = DetailViewController()
-        detailViewController.viewModel = cellViewModel
-        navigationController.present(detailViewController, animated: true, completion: nil)
+    func coordinateToDetail(viewModel: CellViewModelType) {
+        
+        let detailCoordinator = DetailCoordinator(controller: navigationController, viewModel: viewModel)
+        coordinate(to: detailCoordinator)
     }
-    
+
     init(controller: UINavigationController) {
         self.navigationController = controller
     }
