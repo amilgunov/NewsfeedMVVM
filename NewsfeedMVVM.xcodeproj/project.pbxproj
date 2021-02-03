@@ -32,6 +32,7 @@
 		5BBDB5B125CA777400921CD2 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBDB5B025CA777400921CD2 /* MainCoordinator.swift */; };
 		5BBDB5B725CA9A0100921CD2 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBDB5B625CA9A0100921CD2 /* DetailViewController.swift */; };
 		5BBDB5BB25CAB82400921CD2 /* DetailCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBDB5BA25CAB82400921CD2 /* DetailCoordinator.swift */; };
+		5BBDB5CC25CAF53800921CD2 /* AppAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BBDB5CB25CAF53800921CD2 /* AppAppearance.swift */; };
 		5BC05E5424E475800031DA81 /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC05E5324E475800031DA81 /* APIModel.swift */; };
 		EB64D41CDBE47D603A8E072D /* Pods_NewsAppMVVMRx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 286E291B7D87F713FCB86702 /* Pods_NewsAppMVVMRx.framework */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,7 @@
 		5BBDB5B025CA777400921CD2 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		5BBDB5B625CA9A0100921CD2 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		5BBDB5BA25CAB82400921CD2 /* DetailCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailCoordinator.swift; sourceTree = "<group>"; };
+		5BBDB5CB25CAF53800921CD2 /* AppAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAppearance.swift; sourceTree = "<group>"; };
 		5BC05E5324E475800031DA81 /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -182,6 +184,7 @@
 			isa = PBXGroup;
 			children = (
 				5B3B48B124D297EC004A6304 /* AppDelegate.swift */,
+				5BBDB5CB25CAF53800921CD2 /* AppAppearance.swift */,
 				5BBDB5A325CA721800921CD2 /* AppCoordinator.swift */,
 				5B3B48B324D297EC004A6304 /* SceneDelegate.swift */,
 			);
@@ -404,6 +407,7 @@
 				5B2F75B125C7E607003B8CE3 /* Router.swift in Sources */,
 				5B2F75AD25C7D696003B8CE3 /* EndPointType.swift in Sources */,
 				5B3B48B224D297EC004A6304 /* AppDelegate.swift in Sources */,
+				5BBDB5CC25CAF53800921CD2 /* AppAppearance.swift in Sources */,
 				5B79676624D29B72007581B1 /* MainViewController.swift in Sources */,
 				5BBDB5A725CA726A00921CD2 /* CoordinatorType.swift in Sources */,
 				5B3B48BC24D297ED004A6304 /* NewsfeedMVVM.xcdatamodeld in Sources */,
