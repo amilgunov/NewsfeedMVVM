@@ -6,7 +6,6 @@
 //  Copyright © 2020 Alexander Milgunov. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import SnapKit
 
@@ -22,10 +21,33 @@ class CellViewController: UITableViewCell {
         }
     }
     
-    private var newsImageView: UIImageView
-    private var newsTitleLabel: UILabel
-    private var newsAuthorLabel: UILabel
-    private var activityIndicator: UIActivityIndicatorView
+    private lazy var newsImageView: UIImageView = {
+        let image = UIImageView()
+        image.contentMode = .scaleAspectFill
+        image.layer.cornerRadius = 20
+        image.clipsToBounds = true
+        return image
+    }()
+    
+    private lazy var newsTitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }()
+    
+    private lazy var newsAuthorLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.textColor = .lightGray
+        return label
+    }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView()
+        return activityIndicator
+    }()
     
     func bindingViewModel() {
     
@@ -49,28 +71,6 @@ class CellViewController: UITableViewCell {
     }
     
     func setupIU() {
-        
-        newsImageView = {
-            let imageView = UIImageView()
-            imageView.contentMode = .scaleAspectFit
-            
-            return imageView
-        }()
-        
-        newsTitleLabel = {
-            let title = UILabel()
-            title.numberOfLines = 0
-            title.textAlignment = .center
-            return title
-        }()
-        
-        newsAuthorLabel = {
-            let author = UILabel()
-            author.numberOfLines = 0
-            author.textAlignment = .center
-            author.textColor = .lightGray
-            return author
-        }()
             
         addSubview(newsImageView)
         addSubview(newsTitleLabel)
@@ -83,7 +83,7 @@ class CellViewController: UITableViewCell {
         }
         
         newsTitleLabel.snp.makeConstraints { (make) in
-            make.top.equalTo(newsImageView.snp.bottom).offset(10)
+            make.top.equalTo(newsImageView.snp.bottom).offset(30)
             make.left.right.equalToSuperview().inset(10)
         }
         
@@ -106,10 +106,6 @@ class CellViewController: UITableViewCell {
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        self.newsImageView = UIImageView()
-        self.newsTitleLabel = UILabel()
-        self.newsAuthorLabel = UILabel()
-        self.activityIndicator = UIActivityIndicatorView()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupIU()
     }

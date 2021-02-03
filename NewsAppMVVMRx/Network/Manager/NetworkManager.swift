@@ -5,10 +5,9 @@
 //  Created by Alexander Milgunov on 30.01.2021.
 //  Copyright © 2021 Alexander Milgunov. All rights reserved.
 //
-import Foundation
+
 import RxSwift
 import RxAlamofire
-import Alamofire
 
 protocol NetworkManagerType: class {
     func getHeadlines(page: Int) -> Observable<[News]>

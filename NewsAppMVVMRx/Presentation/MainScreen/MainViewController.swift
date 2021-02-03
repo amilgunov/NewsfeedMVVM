@@ -6,7 +6,6 @@
 //  Copyright © 2020 Alexander Milgunov. All rights reserved.
 //
 
-import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
@@ -16,8 +15,9 @@ typealias Section = AnimatableSectionModel<String, CellViewModel>
 
 class MainViewController: UIViewController, UITableViewDelegate {
     
+    var coordinator: DetailFlow?
     private var viewModel: MainViewModel?
-    
+
     private lazy var refreshControl: UIRefreshControl = {
         return UIRefreshControl()
     }()
@@ -26,8 +26,16 @@ class MainViewController: UIViewController, UITableViewDelegate {
         let tableView = UITableView()
         tableView.refreshControl = refreshControl
         tableView.delegate = self
-        tableView.allowsSelection = false
         tableView.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
+        
+        tableView.rx.itemSelected
+            .asObservable()
+            .subscribe(onNext: { indexPath in
+                guard let cell = tableView.dataSource?.tableView(tableView, cellForRowAt: indexPath) as? CellViewController else { return }
+                self.coordinator?.coordinateToDetail(cellViewModel: cell.viewModel)
+            })
+            .disposed(by: disposeBag)
+        
         return tableView
     }()
     
@@ -42,12 +50,16 @@ class MainViewController: UIViewController, UITableViewDelegate {
     
     private let disposeBag = DisposeBag()
    
-    private lazy var dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
-            let cell = tableView.dequeueReusableCell(withIdentifier: CellViewController.cellIdentifier)
-            (cell as? CellViewController)?.viewModel = cellViewModel
-            return cell ?? UITableViewCell()
-        }
-    )
+    private lazy var dataSource: RxTableViewSectionedAnimatedDataSource<Section> = {
+        let dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, target, cellViewModel) in
+                let cell = tableView.dequeueReusableCell(withIdentifier: CellViewController.cellIdentifier)
+                cell?.selectionStyle = UITableViewCell.SelectionStyle.none
+                (cell as? CellViewController)?.viewModel = cellViewModel
+                return cell ?? UITableViewCell()
+            }
+        )
+        return dataSource
+    }()
     
     private func bindViewModel() {
         guard let viewModel = viewModel else { return }
@@ -111,7 +123,6 @@ class MainViewController: UIViewController, UITableViewDelegate {
         tableView.snp.makeConstraints { (make) in
             make.size.equalToSuperview()
         }
-        
         
     }
     

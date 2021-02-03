@@ -6,7 +6,6 @@
 //  Copyright © 2020 Alexander Milgunov. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
@@ -28,8 +27,9 @@ final class CellViewModel: CellViewModelType, IdentifiableType {
     
     let identity: String
     let publishedAt: Date
-    let title:      Driver<String?>
-    let author:     Driver<String?>
+    let title: Driver<String?>
+    let author: Driver<String?>
+    let content: Driver<String?>
     private let urlToImage: String
     private let defaultImage: UIImage?
     
@@ -57,8 +57,9 @@ final class CellViewModel: CellViewModelType, IdentifiableType {
         
         identity = (news.title ?? "") + news.description.prefix(10) + date
         publishedAt = news.publishedAt ?? Date()
-        title = Observable.of(news.title).asDriver(onErrorJustReturn: nil)
-        author = Observable.of((news.author ?? "Noname") + " at " + date).asDriver(onErrorJustReturn: "")
+        title = Driver.of(news.title).asDriver(onErrorJustReturn: nil)
+        author = Driver.of((news.author ?? "Noname") + " at " + date)
+        content = Driver.of(news.content)
         urlToImage = news.urlToImage ?? ""
         defaultImage = UIImage(named: "defaultImage")
     }
