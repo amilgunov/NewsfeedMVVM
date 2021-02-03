@@ -20,15 +20,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         coordinator = AppCoordinator(window: window!)
         coordinator?.start()
-//        let controller = Builder().build()
-//        let rootViewController = controller
-//
-//        window?.rootViewController = UINavigationController(rootViewController: rootViewController)
-//        window?.makeKeyAndVisible()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
-        
         CoreDataStack.shared.saveContext()
     }
 }
