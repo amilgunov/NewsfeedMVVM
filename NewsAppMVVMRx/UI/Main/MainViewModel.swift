@@ -21,7 +21,8 @@ final class MainViewModel: MainViewModelType {
     
     private var dataManager: DataManagerType
     private let isLoading = PublishSubject<Bool>()
-    private let pageTrigger = BehaviorRelay<Int>(value: 1)
+    private let pageTrigger = BehaviorRelay<Int>(value: 0)
+    private let cachedData = BehaviorRelay<Bool>(value: true)
     
     private let disposeBag = DisposeBag()
     
@@ -37,6 +38,10 @@ final class MainViewModel: MainViewModelType {
         let title: Driver<String>
         let cells: Driver<[CellViewModel]>
         let alert: Driver<String>
+    }
+    
+    func startUp() {
+        dataManager.fetchNewDataTrigger.onNext(0)
     }
     
     func transform(input: Input) -> Output {
@@ -55,7 +60,7 @@ final class MainViewModel: MainViewModelType {
             .disposed(by: disposeBag)
 
         /// pageTrigger -> page #+1 when triggered BOTTOM
-        input.reachedBottomTrigger.asObservable().share()
+        input.reachedBottomTrigger.asObservable()
             .observeOn(scheduler)
             .withLatestFrom(isLoading)
             .filter { !$0 }
@@ -64,29 +69,22 @@ final class MainViewModel: MainViewModelType {
             .bind(to: pageTrigger)
             .disposed(by: disposeBag)
         
-        /// Start isLoading
+        /// Start isLoading state
         pageTrigger
+            .skip(1)
             .map { _ in true }
             .bind(to: isLoading)
             .disposed(by: disposeBag)
         
         /// Request to data manager
         pageTrigger
+            .skip(1)
             .bind(to: dataManager.fetchNewDataTrigger)
             .disposed(by: disposeBag)
         
-        pageTrigger
-            .subscribe(onNext: { print("Current page is \($0)")})
-            .disposed(by: disposeBag)
-        
-        
         // MARK: - Receive data from data manager
         
-        let dataObservable = dataManager.dataObservable.delay(.seconds(2), scheduler: scheduler).share()
-        
-        let titleDriver = isLoading
-            .map { $0 ? "Loading..." : "Newsfeed" }
-            .asDriver(onErrorJustReturn: "Something goes wrong...")
+        let dataObservable = dataManager.dataObservable.share()
         
         let cellsDriver = dataObservable
             .map { $0.map { CellViewModel(for: $0) }.unique() }
@@ -100,10 +98,15 @@ final class MainViewModel: MainViewModelType {
             .disposed(by: disposeBag)
         
         dataObservable
-            .subscribe(onNext: { cells in
-                print("New cells count: \(cells.count)")
-            })
+            .skip(1)
+            .map { _ in false }
+            .bind(to: cachedData)
             .disposed(by: disposeBag)
+        
+        let titleDriver = Observable
+            .combineLatest(isLoading, cachedData)
+            .map { $0.0 ? "Updating..." : ( $0.1 ? "Newsfeed (cache)" : "Newsfeed") }
+            .asDriver(onErrorJustReturn: "Something goes wrong...")
         
         let errors = dataManager.errorsObservable
             .map { $0.localizedDescription }
@@ -116,6 +119,3 @@ final class MainViewModel: MainViewModelType {
         dataManager = manager
     }
 }
-
-
-

@@ -11,7 +11,7 @@ import RxAlamofire
 import Alamofire
 
 protocol NetworkManagerType: class {
-    func getNews(page: Int) -> Observable<[News]>
+    func getHeadlines(page: Int) -> Observable<[News]>
     func getNewsImage(from: String) -> Observable<Data>
 }
 
@@ -19,8 +19,8 @@ class NetworkManager: NetworkManagerType {
     
     private let newsRouter = Router<NewsEndPoint>()
     
-    func getNews(page: Int) -> Observable<[News]> {
-        newsRouter.request(.news(page: page))
+    func getHeadlines(page: Int) -> Observable<[News]> {
+        newsRouter.request(.headlines(page: page))
             .map { data -> [News] in
                 do {
                     let json = try JSONDecoder().decode(NewsFeed.self, from: data)

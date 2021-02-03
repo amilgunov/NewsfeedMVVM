@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 
 public enum NewsEndPoint {
-    case news(page: Int)
+    case headlines(page: Int)
     case photo(imageUrl: String)
 }
 
@@ -25,14 +25,18 @@ extension NewsEndPoint: EndPointType {
     }
     
     private var path: String {
-        return "/v2/top-headlines"
+        switch self {
+        case .headlines:
+            return "/v2/top-headlines"
+        default:
+            return ""
+        }
     }
     
     private var queryItems: [URLQueryItem] {
         return [
             URLQueryItem(name: "country", value: "us"),
-            URLQueryItem(name: "category", value: "business"),
-            URLQueryItem(name: "apiKey", value: "27951c65db6a4dd0bb7d3d7e7f1c1fdd")
+            URLQueryItem(name: "category", value: "business")
         ]
     }
     
@@ -40,9 +44,13 @@ extension NewsEndPoint: EndPointType {
         return .get
     }
     
+    var headers: HTTPHeaders? {
+        return [HTTPHeader(name: "X-Api-Key", value: "27951c65db6a4dd0bb7d3d7e7f1c1fdd")]
+    }
+    
     var url: URL? {
         switch self {
-        case .news(let page):
+        case .headlines(let page):
             return configureURL(with: page)
         case .photo(let imageUrl):
             return URL(string: imageUrl)
@@ -51,9 +59,9 @@ extension NewsEndPoint: EndPointType {
     
     private func configureURL(with page: Int) -> URL? {
         var components = URLComponents()
-        components.scheme = self.scheme
-        components.host = self.host
-        components.path = self.path
+        components.scheme = scheme
+        components.host = host
+        components.path = path
         components.queryItems = queryItems
         components.queryItems?.append(URLQueryItem(name: "page", value: "\(page)"))
         return components.url

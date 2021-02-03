@@ -12,4 +12,5 @@ import Alamofire
 protocol EndPointType {
     var url: URL? { get }
     var httpMethod: HTTPMethod { get }
+    var headers: HTTPHeaders? { get }
 }
