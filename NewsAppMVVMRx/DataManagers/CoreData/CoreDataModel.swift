@@ -6,7 +6,6 @@
 //
 //
 
-import Foundation
 import CoreData
 
 @objc(NewsEntity)
@@ -25,6 +24,7 @@ extension NewsEntity {
     @NSManaged public var newsDescription: String?
     @NSManaged public var publishedAt: Date?
     @NSManaged public var author: String?
+    @NSManaged public var content: String?
     
     static let entityName = "NewsEntity"
     
@@ -41,6 +41,7 @@ extension NewsEntity {
         self.newsDescription = jsonData.newsDescription
         self.publishedAt = ISO8601DateFormatter().date(from: jsonData.publishedAt ?? "")
         self.author = jsonData.author
+        self.content = jsonData.content
     }
 
 }

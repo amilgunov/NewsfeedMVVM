@@ -6,7 +6,6 @@
 //  Copyright © 2021 Alexander Milgunov. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import RxSwift
 

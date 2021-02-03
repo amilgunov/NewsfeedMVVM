@@ -6,9 +6,7 @@
 //  Copyright © 2021 Alexander Milgunov. All rights reserved.
 //
 
-import Foundation
 import RxSwift
-import Alamofire
 import RxAlamofire
 
 protocol NetworkRouter: class {

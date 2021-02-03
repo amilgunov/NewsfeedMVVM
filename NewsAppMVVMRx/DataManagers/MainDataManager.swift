@@ -49,14 +49,14 @@ class MainDataManager: DataManagerType {
     public func fetchNewData(page: Int) {
         
         if page == 0 {
-            self.coreDataManager.fetchSavedData()
+            coreDataManager.fetchSavedData()
             return
         }
         
         let scheduler = ConcurrentDispatchQueueScheduler(qos: .default)
         networkManager.getHeadlines(page: page)
             .observeOn(scheduler)
-            // simulate slow network connection
+            /// simulate slow network connection
             .delay(.seconds(1), scheduler: scheduler)
             .catchError({ [unowned self] error -> Observable<[News]> in
                 if error.localizedDescription != "Response status code was unacceptable: 426." {

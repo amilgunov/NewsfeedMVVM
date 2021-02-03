@@ -11,18 +11,20 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    var coordinator: AppCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        
-        let controller = Builder().build()
-        let rootViewController = controller
-        
-        window?.rootViewController = UINavigationController(rootViewController: rootViewController)
-        window?.makeKeyAndVisible()
+        coordinator = AppCoordinator(window: window!)
+        coordinator?.start()
+//        let controller = Builder().build()
+//        let rootViewController = controller
+//
+//        window?.rootViewController = UINavigationController(rootViewController: rootViewController)
+//        window?.makeKeyAndVisible()
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {

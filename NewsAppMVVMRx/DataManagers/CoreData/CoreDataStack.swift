@@ -6,7 +6,6 @@
 //  Copyright © 2020 Alexander Milgunov. All rights reserved.
 //
 
-import Foundation
 import CoreData
 
 class CoreDataStack {
