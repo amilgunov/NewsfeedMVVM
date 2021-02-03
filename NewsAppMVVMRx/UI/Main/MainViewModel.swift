@@ -69,7 +69,7 @@ final class MainViewModel: MainViewModelType {
             .bind(to: pageTrigger)
             .disposed(by: disposeBag)
         
-        /// Start isLoading
+        /// Start isLoading state
         pageTrigger
             .skip(1)
             .map { _ in true }
@@ -105,7 +105,6 @@ final class MainViewModel: MainViewModelType {
         
         let titleDriver = Observable
             .combineLatest(isLoading, cachedData)
-            .debug("title driver")
             .map { $0.0 ? "Updating..." : ( $0.1 ? "Newsfeed (cache)" : "Newsfeed") }
             .asDriver(onErrorJustReturn: "Something goes wrong...")
         

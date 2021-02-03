@@ -17,8 +17,19 @@ typealias Section = AnimatableSectionModel<String, CellViewModel>
 class MainViewController: UIViewController, UITableViewDelegate {
     
     private var viewModel: MainViewModel?
-    private var tableView: UITableView
-    private var refreshControl: UIRefreshControl
+    
+    private lazy var refreshControl: UIRefreshControl = {
+        return UIRefreshControl()
+    }()
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.refreshControl = refreshControl
+        tableView.delegate = self
+        tableView.allowsSelection = false
+        tableView.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
+        return tableView
+    }()
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
@@ -27,11 +38,11 @@ class MainViewController: UIViewController, UITableViewDelegate {
         return indicator
     }()
     
+    private var itemsCount: Int = 0
+    
     private let disposeBag = DisposeBag()
-    
-    private var items: Int = 0
-    
-    private let dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
+   
+    private lazy var dataSource = RxTableViewSectionedAnimatedDataSource<Section>(configureCell: { (_, tableView, _, cellViewModel) in
             let cell = tableView.dequeueReusableCell(withIdentifier: CellViewController.cellIdentifier)
             (cell as? CellViewController)?.viewModel = cellViewModel
             return cell ?? UITableViewCell()
@@ -76,10 +87,10 @@ class MainViewController: UIViewController, UITableViewDelegate {
         output.cells.asObservable()
             .map { $0.count }
             .subscribe(onNext: { [unowned self] cellsCount in
-                if self.items < cellsCount {
-                    self.tableView.scrollToRow(at: IndexPath(item: self.items, section: 0), at: .bottom, animated: true)
+                if self.itemsCount < cellsCount {
+                    self.tableView.scrollToRow(at: IndexPath(item: self.itemsCount, section: 0), at: .bottom, animated: true)
                 }
-                self.items = cellsCount
+                self.itemsCount = cellsCount
             })
             .disposed(by: disposeBag)
         
@@ -101,10 +112,7 @@ class MainViewController: UIViewController, UITableViewDelegate {
             make.size.equalToSuperview()
         }
         
-        tableView.refreshControl = refreshControl
-        tableView.delegate = self
-        tableView.allowsSelection = false
-        tableView.register(CellViewController.self, forCellReuseIdentifier: CellViewController.cellIdentifier)
+        
     }
     
     override func viewDidLoad() {
@@ -116,8 +124,7 @@ class MainViewController: UIViewController, UITableViewDelegate {
     }
 
     init(viewModel: MainViewModel) {
-        self.refreshControl = UIRefreshControl()
-        self.tableView = UITableView()
+        
         self.viewModel = viewModel
         
         super.init(nibName: nil, bundle: nil)

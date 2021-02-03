@@ -8,13 +8,13 @@
 
 import Foundation
 
-struct NewsFeed: Codable {
+struct NewsFeed: Decodable {
     let status: String
     let totalResults: Int
     let articles: [News]
 }
 
-struct News: Codable {
+struct News: Decodable {
     let source: Source?
     let author: String?
     let title, newsDescription: String?
@@ -30,7 +30,7 @@ struct News: Codable {
     }
 }
 
-struct Source: Codable {
+struct Source: Decodable {
     let id: String?
     let name: String
 }
