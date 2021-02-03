@@ -14,7 +14,7 @@
 		5B2F75BE25C7F0B5003B8CE3 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B2F75BD25C7F0B5003B8CE3 /* UIViewController+Extensions.swift */; };
 		5B3B48B224D297EC004A6304 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B48B124D297EC004A6304 /* AppDelegate.swift */; };
 		5B3B48B424D297EC004A6304 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B48B324D297EC004A6304 /* SceneDelegate.swift */; };
-		5B3B48BC24D297ED004A6304 /* NewsAppMVVMRx.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B48BA24D297ED004A6304 /* NewsAppMVVMRx.xcdatamodeld */; };
+		5B3B48BC24D297ED004A6304 /* NewsfeedMVVM.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5B3B48BA24D297ED004A6304 /* NewsfeedMVVM.xcdatamodeld */; };
 		5B3B48BE24D297F7004A6304 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B48BD24D297F7004A6304 /* Assets.xcassets */; };
 		5B3B48C124D297F7004A6304 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B3B48BF24D297F7004A6304 /* LaunchScreen.storyboard */; };
 		5B46A1DB25B9557100A6DA33 /* Reactive+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B46A1DA25B9557100A6DA33 /* Reactive+Extensions.swift */; };
@@ -45,7 +45,7 @@
 		5B2F75AC25C7D696003B8CE3 /* EndPointType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointType.swift; sourceTree = "<group>"; };
 		5B2F75B025C7E607003B8CE3 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		5B2F75BD25C7F0B5003B8CE3 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
-		5B3B48AE24D297EC004A6304 /* NewsAppMVVMRx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsAppMVVMRx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B3B48AE24D297EC004A6304 /* NewsfeedMVVM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsfeedMVVM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B3B48B124D297EC004A6304 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5B3B48B324D297EC004A6304 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		5B3B48BB24D297ED004A6304 /* TochkaNews.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TochkaNews.xcdatamodel; sourceTree = "<group>"; };
@@ -61,7 +61,7 @@
 		5B79676924D29BCD007581B1 /* CellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewModel.swift; sourceTree = "<group>"; };
 		5B79676B24D29BEA007581B1 /* CellViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellViewController.swift; sourceTree = "<group>"; };
 		5B79677224D29C84007581B1 /* MainDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDataManager.swift; sourceTree = "<group>"; };
-		5B79677724D29CFE007581B1 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CoreDataModel.swift; path = NewsAppMVVMRx/DataManagers/CoreData/CoreDataModel.swift; sourceTree = SOURCE_ROOT; };
+		5B79677724D29CFE007581B1 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		5BBDB5A325CA721800921CD2 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		5BBDB5A625CA726A00921CD2 /* CoordinatorType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorType.swift; sourceTree = "<group>"; };
 		5BBDB5B025CA777400921CD2 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
@@ -119,7 +119,7 @@
 		5B3B48A524D297EC004A6304 = {
 			isa = PBXGroup;
 			children = (
-				5B3B48B024D297EC004A6304 /* NewsAppMVVMRx */,
+				5B3B48B024D297EC004A6304 /* NewsfeedMVVM */,
 				5B3B48AF24D297EC004A6304 /* Products */,
 				C20050CFFF9F2D9D38C7DBFD /* Pods */,
 				A9BA9CB2C6E252ADB6A44B8D /* Frameworks */,
@@ -129,12 +129,12 @@
 		5B3B48AF24D297EC004A6304 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5B3B48AE24D297EC004A6304 /* NewsAppMVVMRx.app */,
+				5B3B48AE24D297EC004A6304 /* NewsfeedMVVM.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5B3B48B024D297EC004A6304 /* NewsAppMVVMRx */ = {
+		5B3B48B024D297EC004A6304 /* NewsfeedMVVM */ = {
 			isa = PBXGroup;
 			children = (
 				5BC05E4E24E471FD0031DA81 /* App */,
@@ -145,7 +145,7 @@
 				5BC05E5524E475EA0031DA81 /* Resources */,
 				5BC05E4F24E472510031DA81 /* Extensions */,
 			);
-			path = NewsAppMVVMRx;
+			path = NewsfeedMVVM;
 			sourceTree = "<group>";
 		};
 		5B68A49025C5D2DB001EA6CB /* Network */ = {
@@ -212,7 +212,7 @@
 			children = (
 				5B3B48BD24D297F7004A6304 /* Assets.xcassets */,
 				5B3B48C224D297F7004A6304 /* Info.plist */,
-				5B3B48BA24D297ED004A6304 /* NewsAppMVVMRx.xcdatamodeld */,
+				5B3B48BA24D297ED004A6304 /* NewsfeedMVVM.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -274,9 +274,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5B3B48AD24D297EC004A6304 /* NewsAppMVVMRx */ = {
+		5B3B48AD24D297EC004A6304 /* NewsfeedMVVM */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5B3B48C524D297F7004A6304 /* Build configuration list for PBXNativeTarget "NewsAppMVVMRx" */;
+			buildConfigurationList = 5B3B48C524D297F7004A6304 /* Build configuration list for PBXNativeTarget "NewsfeedMVVM" */;
 			buildPhases = (
 				F8FCE263BD73FF015FB82D45 /* [CP] Check Pods Manifest.lock */,
 				5B3B48AA24D297EC004A6304 /* Sources */,
@@ -288,9 +288,9 @@
 			);
 			dependencies = (
 			);
-			name = NewsAppMVVMRx;
+			name = NewsfeedMVVM;
 			productName = TochkaNews;
-			productReference = 5B3B48AE24D297EC004A6304 /* NewsAppMVVMRx.app */;
+			productReference = 5B3B48AE24D297EC004A6304 /* NewsfeedMVVM.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -308,7 +308,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 5B3B48A924D297EC004A6304 /* Build configuration list for PBXProject "NewsAppMVVMRx" */;
+			buildConfigurationList = 5B3B48A924D297EC004A6304 /* Build configuration list for PBXProject "NewsfeedMVVM" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -321,7 +321,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5B3B48AD24D297EC004A6304 /* NewsAppMVVMRx */,
+				5B3B48AD24D297EC004A6304 /* NewsfeedMVVM */,
 			);
 		};
 /* End PBXProject section */
@@ -406,7 +406,7 @@
 				5B3B48B224D297EC004A6304 /* AppDelegate.swift in Sources */,
 				5B79676624D29B72007581B1 /* MainViewController.swift in Sources */,
 				5BBDB5A725CA726A00921CD2 /* CoordinatorType.swift in Sources */,
-				5B3B48BC24D297ED004A6304 /* NewsAppMVVMRx.xcdatamodeld in Sources */,
+				5B3B48BC24D297ED004A6304 /* NewsfeedMVVM.xcdatamodeld in Sources */,
 				5B3B48B424D297EC004A6304 /* SceneDelegate.swift in Sources */,
 				5B68A49725C5DBA5001EA6CB /* NetworkManager.swift in Sources */,
 			);
@@ -549,13 +549,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XN6J4W4W4C;
-				INFOPLIST_FILE = "$(SRCROOT)/NewsAppMVVMRx/Resources/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/NewsfeedMVVM/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Alexander-Milgunov.NewsAppMVVMRx";
+				PRODUCT_BUNDLE_IDENTIFIER = "Alexander-Milgunov.NewsfeedMVVM";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -569,13 +569,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XN6J4W4W4C;
-				INFOPLIST_FILE = "$(SRCROOT)/NewsAppMVVMRx/Resources/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/NewsfeedMVVM/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "Alexander-Milgunov.NewsAppMVVMRx";
+				PRODUCT_BUNDLE_IDENTIFIER = "Alexander-Milgunov.NewsfeedMVVM";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -585,7 +585,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5B3B48A924D297EC004A6304 /* Build configuration list for PBXProject "NewsAppMVVMRx" */ = {
+		5B3B48A924D297EC004A6304 /* Build configuration list for PBXProject "NewsfeedMVVM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5B3B48C324D297F7004A6304 /* Debug */,
@@ -594,7 +594,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5B3B48C524D297F7004A6304 /* Build configuration list for PBXNativeTarget "NewsAppMVVMRx" */ = {
+		5B3B48C524D297F7004A6304 /* Build configuration list for PBXNativeTarget "NewsfeedMVVM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5B3B48C624D297F7004A6304 /* Debug */,
@@ -606,13 +606,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		5B3B48BA24D297ED004A6304 /* NewsAppMVVMRx.xcdatamodeld */ = {
+		5B3B48BA24D297ED004A6304 /* NewsfeedMVVM.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				5B3B48BB24D297ED004A6304 /* TochkaNews.xcdatamodel */,
 			);
 			currentVersion = 5B3B48BB24D297ED004A6304 /* TochkaNews.xcdatamodel */;
-			path = NewsAppMVVMRx.xcdatamodeld;
+			path = NewsfeedMVVM.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

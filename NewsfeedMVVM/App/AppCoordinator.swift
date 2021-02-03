@@ -12,10 +12,6 @@ class AppCoordinator: CoordinatorType {
     
     let window: UIWindow
     
-    init(window: UIWindow) {
-        self.window = window
-    }
-    
     func start() {
         
         let navigationController = UINavigationController()
@@ -24,5 +20,9 @@ class AppCoordinator: CoordinatorType {
         
         let mainScreenCoordinator = MainCoordinator(controller: navigationController)
         coordinate(to: mainScreenCoordinator)
+    }
+    
+    init(window: UIWindow) {
+        self.window = window
     }
 }
