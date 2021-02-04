@@ -9,7 +9,7 @@
 import RxSwift
 import RxCocoa
 
-protocol MainViewModelType {
+protocol MainViewModelType: class {
     
     associatedtype Input
     associatedtype Output

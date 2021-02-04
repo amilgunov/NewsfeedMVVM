@@ -16,7 +16,7 @@ typealias Section = AnimatableSectionModel<String, CellViewModel>
 class MainViewController: UIViewController, UITableViewDelegate {
     
     var coordinator: DetailFlow?
-    private var viewModel: MainViewModel?
+    private weak var viewModel: MainViewModel?
 
     private lazy var refreshControl: UIRefreshControl = {
         return UIRefreshControl()
