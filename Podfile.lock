@@ -20,10 +20,10 @@ PODS:
 
 DEPENDENCIES:
   - RxAlamofire
-  - RxCocoa (~> 5)
-  - RxDataSources (~> 4.0)
-  - RxSwift (~> 5)
-  - SnapKit (~> 5.0.0)
+  - RxCocoa
+  - RxDataSources
+  - RxSwift
+  - SnapKit
 
 SPEC REPOS:
   trunk:
@@ -46,6 +46,6 @@ SPEC CHECKSUMS:
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
-PODFILE CHECKSUM: 5eb87764c18733b28d3bbe00f8df700c44162927
+PODFILE CHECKSUM: 0e0190df2cdd88c0f5531d229d100ef93cd6f05d
 
 COCOAPODS: 1.9.1

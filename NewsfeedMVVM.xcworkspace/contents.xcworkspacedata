@@ -2,12 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/alexandermilgunov/Desktop/XCodeProjects/NewsApp/NewsfeedMVVM.xcodeproj">
+      location = "group:NewsfeedMVVM.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:NewsfeedMVVM.xcodeproj">
    </FileRef>
 </Workspace>
