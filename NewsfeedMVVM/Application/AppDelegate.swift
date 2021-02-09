@@ -7,9 +7,16 @@
 //
 
 import UIKit
+import Swinject
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
+    let container: Container = {
+            let container = Container()
+            container.register(NetworkManager.self) { _ in NetworkManager() }
+            return container
+        }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
