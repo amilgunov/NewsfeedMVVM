@@ -8,3 +8,4 @@ The Newsfeed app with following stack:
   - RxDataSources
   - RxAlamofire
   - SnapKit
+  - Swinject
