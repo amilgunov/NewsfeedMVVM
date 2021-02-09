@@ -7,10 +7,21 @@
 //
 
 import UIKit
+import Swinject
 
 class AppCoordinator: CoordinatorType {
     
     let window: UIWindow
+    let container: Container = {
+        let container = Container()
+        container.register(NetworkManager.self) { _ in NetworkManager() }
+        container.register(MainDataManager.self) { r in
+            let coreDataManager = CoreDataManager(persistentContainer: CoreDataStack.shared.persistentContainer)
+            let networkManager = r.resolve(NetworkManager.self) ?? NetworkManager()
+            return MainDataManager(coreDataManager: coreDataManager, networkManager: networkManager)
+        }
+        return container
+    }()
     
     func start() {
         
@@ -18,7 +29,7 @@ class AppCoordinator: CoordinatorType {
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
         
-        let mainScreenCoordinator = MainCoordinator(controller: navigationController)
+        let mainScreenCoordinator = MainCoordinator(container: container, controller: navigationController)
         coordinate(to: mainScreenCoordinator)
     }
     

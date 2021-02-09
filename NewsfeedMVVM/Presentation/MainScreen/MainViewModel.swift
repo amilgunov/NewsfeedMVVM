@@ -8,6 +8,7 @@
 
 import RxSwift
 import RxCocoa
+import Swinject
 
 protocol MainViewModelType {
     
@@ -19,7 +20,9 @@ protocol MainViewModelType {
 
 final class MainViewModel: MainViewModelType {
     
-    private var dataManager: DataManagerType
+    private let container: Container
+    
+    private var dataManager: DataManagerType!
     private let isLoading = PublishSubject<Bool>()
     private let pageTrigger = BehaviorRelay<Int>(value: 0)
     private let cachedData = BehaviorRelay<Bool>(value: true)
@@ -87,7 +90,7 @@ final class MainViewModel: MainViewModelType {
         let dataObservable = dataManager.dataObservable.share()
         
         let cellsDriver = dataObservable
-            .map { $0.map { CellViewModel(for: $0) }.unique() }
+            .map { $0.map { [weak self] in CellViewModel(for: $0, dependencies: self?.container) }.unique() }
             .map { $0.sorted { $0.publishedAt > $1.publishedAt } }
             .asDriver(onErrorJustReturn: [])
         
@@ -115,7 +118,8 @@ final class MainViewModel: MainViewModelType {
         return Output(isLoading: isLoading.asDriver(onErrorJustReturn: false), title: titleDriver, cells: cellsDriver, alert: errors)
     }
     
-    init(with manager: DataManagerType) {
-        dataManager = manager
+    init(with dependencies: Container) {
+        container = dependencies
+        dataManager = dependencies.resolve(MainDataManager.self)
     }
 }
