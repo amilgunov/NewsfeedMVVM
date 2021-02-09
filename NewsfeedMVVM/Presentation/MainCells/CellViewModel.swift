@@ -9,6 +9,7 @@
 import RxSwift
 import RxCocoa
 import RxDataSources
+import Swinject
 
 let imageCache = NSCache<NSString, UIImage>()
 
@@ -24,7 +25,7 @@ protocol CellViewModelType {
 
 final class CellViewModel: CellViewModelType, IdentifiableType {
     
-    private let networkManager = NetworkManager()
+    private let networkManager: NetworkManagerType!
     
     let identity: String
     let publishedAt: Date
@@ -52,7 +53,7 @@ final class CellViewModel: CellViewModelType, IdentifiableType {
             }.asDriver(onErrorJustReturn: defaultImage)
     }
     
-    init(for news: NewsEntity) {
+    init(for news: NewsEntity, dependencies: Container?) {
         
         let date = NewsEntity.dateFormatter.string(from: news.publishedAt ?? Date())
         
@@ -63,6 +64,7 @@ final class CellViewModel: CellViewModelType, IdentifiableType {
         content = Driver.of(news.content)
         urlToImage = news.urlToImage ?? ""
         defaultImage = UIImage(named: "defaultImage")
+        networkManager = dependencies?.resolve(NetworkManager.self)
     }
 }
 

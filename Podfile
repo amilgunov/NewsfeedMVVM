@@ -12,5 +12,6 @@ target 'NewsfeedMVVM' do
     	pod 'RxCocoa'
 	pod 'RxDataSources'
 	pod 'RxAlamofire'	
+	pod 'Swinject'
 
 end

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Swinject
 
 protocol DetailFlow: class {
     func coordinateToDetail(viewModel: CellViewModelType)
@@ -15,14 +16,11 @@ protocol DetailFlow: class {
 class MainCoordinator: CoordinatorType, DetailFlow {
     
     let navigationController: UINavigationController
+    let container: Container
     
     func start() {
         
-        let container = CoreDataStack.shared.persistentContainer
-        let coreDataManager = CoreDataManager(persistentContainer: container)
-        let networkManager = NetworkManager()
-        let dataManager = MainDataManager(coreDataManager: coreDataManager, networkManager: networkManager)
-        let viewModel = MainViewModel(with: dataManager)
+        let viewModel = MainViewModel(with: container)
         
         let mainViewController = MainViewController(viewModel: viewModel)
         mainViewController.coordinator = self
@@ -36,7 +34,8 @@ class MainCoordinator: CoordinatorType, DetailFlow {
         coordinate(to: detailCoordinator)
     }
 
-    init(controller: UINavigationController) {
+    init(container: Container, controller: UINavigationController) {
         self.navigationController = controller
+        self.container = container
     }
 }
