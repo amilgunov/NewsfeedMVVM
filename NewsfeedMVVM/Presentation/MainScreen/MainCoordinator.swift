@@ -10,32 +10,30 @@ import UIKit
 import Swinject
 
 protocol DetailFlow: class {
-    func coordinateToDetail(viewModel: CellViewModelType)
+    func coordinateToDetail(cellViewModel: CellViewModelType)
 }
 
 class MainCoordinator: CoordinatorType, DetailFlow {
     
-    let navigationController: UINavigationController
     let container: Container
+    let navigationController: UINavigationController
     
     func start() {
         
-        let viewModel = MainViewModel(with: container)
-        
-        let mainViewController = MainViewController(viewModel: viewModel)
+        guard let mainViewController = container.resolve(MainViewController.self) else { return }
         mainViewController.coordinator = self
         
         navigationController.pushViewController(mainViewController, animated: true)
     }
     
-    func coordinateToDetail(viewModel: CellViewModelType) {
+    func coordinateToDetail(cellViewModel: CellViewModelType) {
         
-        let detailCoordinator = DetailCoordinator(controller: navigationController, viewModel: viewModel)
+        let detailCoordinator = DetailCoordinator(navigationController: navigationController, cellViewModel: cellViewModel)
         coordinate(to: detailCoordinator)
     }
 
-    init(container: Container, controller: UINavigationController) {
-        self.navigationController = controller
+    init(container: Container, navigationController: UINavigationController) {
         self.container = container
+        self.navigationController = navigationController
     }
 }

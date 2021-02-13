@@ -13,7 +13,7 @@ class DetailViewController: UIViewController {
     
     private var disposeBag = DisposeBag()
     
-    var viewModel: CellViewModelType? {
+    var cellViewModel: CellViewModelType? {
         didSet {
             bindingViewModel()
         }
@@ -96,25 +96,25 @@ class DetailViewController: UIViewController {
     
     func bindingViewModel() {
     
-        viewModel?.title
+        cellViewModel?.title
             .drive(newsTitleLabel.rx.text)
             .disposed(by: disposeBag)
     
-        viewModel?.author
+        cellViewModel?.author
             .drive(newsAuthorLabel.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel?.content
+        cellViewModel?.content
             .drive(newsContentLabel.rx.text)
             .disposed(by: disposeBag)
         
-        viewModel?.image
+        cellViewModel?.image
             .map { _ in true }
             .asDriver()
             .drive(activityIndicator.rx.isHidden)
             .disposed(by: disposeBag)
         
-        viewModel?.image
+        cellViewModel?.image
             .drive(newsImageView.rx.image)
             .disposed(by: disposeBag)
     }

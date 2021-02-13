@@ -7,20 +7,21 @@
 //
 
 import UIKit
+import Swinject
 
 class DetailCoordinator: CoordinatorType {
     
     let navigationController: UINavigationController?
-    let viewModel: CellViewModelType
+    let cellViewModel: CellViewModelType?
     
     func start() {
         let detailViewController = DetailViewController()
-        detailViewController.viewModel = viewModel
+        detailViewController.cellViewModel = cellViewModel
         navigationController?.present(detailViewController, animated: true)
     }
     
-    init(controller: UINavigationController, viewModel: CellViewModelType) {
-        self.navigationController = controller
-        self.viewModel = viewModel
+    init(navigationController: UINavigationController, cellViewModel: CellViewModelType) {
+        self.navigationController = navigationController
+        self.cellViewModel = cellViewModel
     }
 }
