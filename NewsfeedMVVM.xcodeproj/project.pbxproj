@@ -167,7 +167,6 @@
 			children = (
 				5B2F75C525C84B08003B8CE3 /* LaunchScreen */,
 				5BC05E5624E476E70031DA81 /* MainScreen */,
-				5BC05E5724E476FF0031DA81 /* MainCells */,
 				5BBDB5B425CA7D1900921CD2 /* DetailScreen */,
 			);
 			path = Presentation;
@@ -225,6 +224,7 @@
 		5BC05E5624E476E70031DA81 /* MainScreen */ = {
 			isa = PBXGroup;
 			children = (
+				5BC05E5724E476FF0031DA81 /* Cells */,
 				5B79676524D29B72007581B1 /* MainViewController.swift */,
 				5B79676724D29B95007581B1 /* MainViewModel.swift */,
 				5BBDB5B025CA777400921CD2 /* MainCoordinator.swift */,
@@ -232,13 +232,13 @@
 			path = MainScreen;
 			sourceTree = "<group>";
 		};
-		5BC05E5724E476FF0031DA81 /* MainCells */ = {
+		5BC05E5724E476FF0031DA81 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
 				5B79676B24D29BEA007581B1 /* CellViewController.swift */,
 				5B79676924D29BCD007581B1 /* CellViewModel.swift */,
 			);
-			path = MainCells;
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		5BC05E5824E477790031DA81 /* Coordinator */ = {

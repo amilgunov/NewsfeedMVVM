@@ -25,7 +25,7 @@ protocol CellViewModelType {
 
 final class CellViewModel: CellViewModelType, IdentifiableType {
     
-    private let networkManager: NetworkManagerType!
+    private let networkManager: NetworkManagerType?
     
     let identity: String
     let publishedAt: Date
@@ -40,6 +40,8 @@ final class CellViewModel: CellViewModelType, IdentifiableType {
         if let cachedImage = imageCache.object(forKey: NSString(string: urlToImage)) {
             return Driver<UIImage?>.just(cachedImage)
         }
+        
+        guard let networkManager = networkManager else { return Driver<UIImage?>.just(UIImage()) }
         
         return networkManager.getNewsImage(from: urlToImage)
             .delay(.seconds(1), scheduler: MainScheduler.instance)
